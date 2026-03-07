@@ -1,38 +1,36 @@
-.app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 24px;
-}
-
-.app-header {
-  text-align: center;
-  margin-bottom: 36px;
-}
-
-.app-header h1 {
-  font-size: 2.2rem;
-  margin: 0 0 8px;
-  color: #eee;
-}
-
-.header-icon {
-  font-size: 2rem;
-}
-
-.header-sub {
-  color: #888;
-  margin: 0;
-  font-size: 1rem;
-}
-
-.app-main {
+.app-layout {
   display: flex;
-  gap: 32px;
-  align-items: flex-start;
+  min-height: calc(100vh - var(--header-height));
 }
 
-@media (max-width: 768px) {
-  .app-main {
-    flex-direction: column;
-  }
+.app-content {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Desktop layout with sidebar */
+.desktop-layout .app-content {
+  margin-left: var(--sidebar-width);
+}
+
+/* Reports placeholder */
+.reports-page {
+  padding: var(--space-4);
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.reports-page h2 {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--space-6);
+}
+
+.placeholder-card {
+  background: var(--surface-primary);
+  border: 2px dashed var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: var(--space-12);
+  text-align: center;
+  color: var(--text-tertiary);
 }
