@@ -136,6 +136,34 @@ export default function BrandAdminDashboard() {
         </div>
       </section>
 
+      {/* AI Onboarding quick actions */}
+      <div className="ba-ai-onboarding">
+        <button className="ba-ai-tile" onClick={() => navigate('/bulk-onboarding')}>
+          <div className="ba-ai-tile-icon">&#128228;</div>
+          <div>
+            <div className="ba-ai-tile-title">Bulk onboard users</div>
+            <div className="ba-ai-tile-sub">AI normalises any partner file format \u2014 3 hours \u2192 3 minutes</div>
+          </div>
+          <AIBadge label="AI" />
+        </button>
+        <button className="ba-ai-tile" onClick={() => navigate('/plan-config')}>
+          <div className="ba-ai-tile-icon">&#128196;</div>
+          <div>
+            <div className="ba-ai-tile-title">Generate plan config</div>
+            <div className="ba-ai-tile-sub">AI pre-fills 42 fields from a deal brief using reference partners</div>
+          </div>
+          <AIBadge label="AI" />
+        </button>
+        <button className="ba-ai-tile" onClick={() => navigate('/ask')}>
+          <div className="ba-ai-tile-icon">&#10022;</div>
+          <div>
+            <div className="ba-ai-tile-title">Ask MPOS</div>
+            <div className="ba-ai-tile-sub">Natural-language queries, insights, and one-tap actions</div>
+          </div>
+          <AIBadge label="AI" />
+        </button>
+      </div>
+
       <div className="ba-split">
         {/* Trend chart */}
         <div className="card ba-chart-card">

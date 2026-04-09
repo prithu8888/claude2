@@ -94,6 +94,8 @@ const adminNav: SidebarItem[] = [
   { path: '/home', labelKey: 'nav.dashboard', icon: icons.home },
   { path: '/transactions', labelKey: 'nav.transactions', icon: icons.transactions },
   { path: '/dealers', labelKey: 'nav.dealers', icon: icons.dealers },
+  { path: '/bulk-onboarding', labelKey: 'nav.bulkOnboarding', icon: icons.kyc },
+  { path: '/plan-config', labelKey: 'nav.planConfig', icon: icons.settings },
   { path: '/campaigns', labelKey: 'nav.campaigns', icon: icons.campaigns },
   { path: '/claims', labelKey: 'nav.claims', icon: icons.claims },
   { path: '/invoices', labelKey: 'nav.invoices', icon: icons.invoices },
