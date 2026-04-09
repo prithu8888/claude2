@@ -1,74 +1,225 @@
+import { useNavigate } from 'react-router-dom';
 import { brandMetrics } from '../../data/mockData';
-import BrandInsights from '../agents/BrandInsights';
+import { formatINR } from '../../i18n/strings';
+import AIBadge from '../shared/AIBadge';
 import './BrandAdmin.css';
 
-const recentActivity = [
-  { id: 1, text: 'New dealer "SpeedEV Dealers" registered from Ahmedabad', time: '2 hours ago', color: 'green' as const },
-  { id: 2, text: 'Policy #POL-12847 issued for Samsung Galaxy S24 - Extended Warranty', time: '3 hours ago', color: 'blue' as const },
-  { id: 3, text: 'Claim #CL-0892 filed for Ola S1 Pro - Theft reported', time: '5 hours ago', color: 'orange' as const },
-  { id: 4, text: 'Dealer "Kumar Mobile Hub" crossed 50 monthly sales milestone', time: '8 hours ago', color: 'purple' as const },
-  { id: 5, text: 'Commission payout of Rs.45,200 processed for 12 dealers', time: '1 day ago', color: 'green' as const },
+interface AIAlert {
+  type: 'trend' | 'alert' | 'recommendation' | 'anomaly';
+  title: string;
+  description: string;
+  action?: string;
+  metric?: string;
+}
+
+const aiAlerts: AIAlert[] = [
+  {
+    type: 'alert',
+    title: 'Loss ratio trending up on Samsung A-series',
+    description: 'Screen-damage claims have doubled over the last 30 days. Pattern matches a known defective batch from Q4 2025. Recommend tightening eligibility.',
+    action: 'Review with actuary',
+    metric: '+3.2pp MoM',
+  },
+  {
+    type: 'anomaly',
+    title: 'Croma Koramangala \u2014 0 sales in 14 days',
+    description: 'Normally ranks top 5. Last sale was 12 March. Dealer may need outreach.',
+    action: 'Contact dealer',
+  },
+  {
+    type: 'recommendation',
+    title: 'Karnataka attach rate is 4pp below national average',
+    description: 'A state-specific campaign here may have the highest ROI. Comparable brands saw 23% attach rate uplift at 12% discount.',
+    action: 'Create campaign',
+  },
+  {
+    type: 'trend',
+    title: 'Fraud Gate prevented \u20B94.2L exposure this week',
+    description: 'Auto-flagged 17 suspicious claims. 9 were confirmed fraud. Model precision is 92%.',
+    metric: '+\u20B94.2L saved',
+  },
 ];
 
-function formatCurrency(amount: number): string {
-  if (amount >= 100000) {
-    return `Rs.${(amount / 100000).toFixed(1)}L`;
-  }
-  return `Rs.${amount.toLocaleString('en-IN')}`;
+const topDealers = [
+  { name: 'Croma Koramangala', sales: 234, revenue: 1240000 },
+  { name: 'Reliance Digital Bengaluru', sales: 198, revenue: 1090000 },
+  { name: 'Sangeetha Mobiles Chennai', sales: 176, revenue: 895000 },
+  { name: 'Poorvika Mobiles', sales: 143, revenue: 762000 },
+  { name: 'Vijay Sales Andheri', sales: 128, revenue: 681000 },
+];
+
+function formatCompact(amount: number): string {
+  if (amount >= 10000000) return `\u20B9${(amount / 10000000).toFixed(1)}Cr`;
+  if (amount >= 100000) return `\u20B9${(amount / 100000).toFixed(1)}L`;
+  return formatINR(amount);
 }
 
 export default function BrandAdminDashboard() {
-  const metrics = [
-    { label: 'Total Dealers', value: brandMetrics.totalDealers.toString(), sub: 'Across all cities' },
-    { label: 'Active Dealers', value: brandMetrics.activeDealers.toString(), sub: `${((brandMetrics.activeDealers / brandMetrics.totalDealers) * 100).toFixed(0)}% activation rate` },
-    { label: 'Total Policies', value: brandMetrics.totalPolicies.toLocaleString('en-IN'), sub: 'All time' },
-    { label: 'Month Policies', value: brandMetrics.monthPolicies.toLocaleString('en-IN'), sub: 'March 2026' },
-    { label: 'GWP', value: formatCurrency(brandMetrics.gwp), sub: 'Gross Written Premium' },
-    { label: 'Claims Ratio', value: `${brandMetrics.claimsRatio}%`, sub: 'Below industry average' },
-  ];
+  const navigate = useNavigate();
+
+  const alertTypeMeta = (type: AIAlert['type']) => {
+    switch (type) {
+      case 'alert': return { emoji: '\u26A0', color: 'warning' };
+      case 'anomaly': return { emoji: '\u2691', color: 'error' };
+      case 'recommendation': return { emoji: '\u2728', color: 'info' };
+      case 'trend': return { emoji: '\u2191', color: 'success' };
+    }
+  };
 
   return (
     <div className="ba-page">
-      <div className="ba-page-header">
-        <h1>Brand Admin Dashboard</h1>
-        <div className="ba-page-header-actions">
-          <button className="btn-secondary">Export Report</button>
-          <button className="btn-primary">+ Add Dealer</button>
+      <header className="ba-header">
+        <div>
+          <h1 className="page-title">Dashboard</h1>
+          <p className="text-secondary">What\u2019s happening across Xiaomi India \u2014 March 2026</p>
+        </div>
+        <div className="ba-header-actions">
+          <button className="btn-secondary" onClick={() => navigate('/invoices')}>Download MIS</button>
+          <button className="btn-primary" onClick={() => navigate('/campaigns/new')}>+ New campaign</button>
+        </div>
+      </header>
+
+      {/* KPI row */}
+      <div className="ba-kpi-row">
+        <div className="ba-kpi card">
+          <div className="ba-kpi-label">GWP this month</div>
+          <div className="ba-kpi-value">{formatCompact(brandMetrics.gwp)}</div>
+          <div className="ba-kpi-delta success">&#9650; 12% vs Feb</div>
+        </div>
+        <div className="ba-kpi card">
+          <div className="ba-kpi-label">Policies issued</div>
+          <div className="ba-kpi-value">{brandMetrics.monthPolicies.toLocaleString('en-IN')}</div>
+          <div className="ba-kpi-delta success">&#9650; 8% vs Feb</div>
+        </div>
+        <div className="ba-kpi card">
+          <div className="ba-kpi-label">Active dealers</div>
+          <div className="ba-kpi-value">{brandMetrics.activeDealers}</div>
+          <div className="ba-kpi-delta text-secondary">of {brandMetrics.totalDealers} total</div>
+        </div>
+        <div className="ba-kpi card">
+          <div className="ba-kpi-label">Attach rate</div>
+          <div className="ba-kpi-value">8.4%</div>
+          <div className="ba-kpi-delta error">&#9660; 0.3pp vs Feb</div>
         </div>
       </div>
 
-      <div className="ba-metrics-grid">
-        {metrics.map((m) => (
-          <div key={m.label} className="ba-metric-card">
-            <div className="ba-metric-label">{m.label}</div>
-            <div className="ba-metric-value">{m.value}</div>
-            <div className="ba-metric-sub">{m.sub}</div>
+      {/* AI Alerts — front and center */}
+      <section className="ba-ai-section">
+        <div className="ba-ai-header">
+          <div className="ba-ai-title-group">
+            <AIBadge label="AI Insights" shimmer />
+            <h2>Needs your attention</h2>
           </div>
-        ))}
-      </div>
-
-      <BrandInsights />
-
-      <div className="ba-dashboard-grid">
-        <div className="ba-activity-feed">
-          <h3>Recent Activity</h3>
-          {recentActivity.map((item) => (
-            <div key={item.id} className="ba-activity-item">
-              <div className={`ba-activity-dot ${item.color}`} />
-              <div>
-                <div className="ba-activity-text">{item.text}</div>
-                <div className="ba-activity-time">{item.time}</div>
+          <button className="btn-ghost" onClick={() => navigate('/ask')}>
+            Ask MPOS &rarr;
+          </button>
+        </div>
+        <div className="ba-ai-grid">
+          {aiAlerts.map((alert, i) => {
+            const meta = alertTypeMeta(alert.type);
+            return (
+              <div key={i} className={`ba-ai-card ba-ai-card-${meta.color}`}>
+                <div className="ba-ai-card-header">
+                  <div className={`ba-ai-icon ba-ai-icon-${meta.color}`}>{meta.emoji}</div>
+                  {alert.metric && <span className={`badge badge-${meta.color}`}>{alert.metric}</span>}
+                </div>
+                <div className="ba-ai-card-title">{alert.title}</div>
+                <div className="ba-ai-card-desc">{alert.description}</div>
+                {alert.action && (
+                  <button className="ba-ai-card-action">
+                    {alert.action} &rarr;
+                  </button>
+                )}
               </div>
-            </div>
-          ))}
+            );
+          })}
+        </div>
+      </section>
+
+      <div className="ba-split">
+        {/* Trend chart */}
+        <div className="card ba-chart-card">
+          <div className="ba-card-title">GWP & policies \u2014 last 6 months</div>
+          <svg viewBox="0 0 600 220" className="ba-chart-svg">
+            <defs>
+              <linearGradient id="ba-area" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#3B82F6" stopOpacity="0.4" />
+                <stop offset="100%" stopColor="#3B82F6" stopOpacity="0" />
+              </linearGradient>
+            </defs>
+            {/* Grid */}
+            {[0, 1, 2, 3, 4].map((i) => (
+              <line key={i} x1="40" y1={30 + i * 35} x2="580" y2={30 + i * 35} stroke="#E2E8F0" strokeDasharray="3 3" />
+            ))}
+            {/* Line + area */}
+            <path
+              d="M 60 150 L 150 130 L 240 115 L 330 95 L 420 80 L 510 55 L 510 170 L 60 170 Z"
+              fill="url(#ba-area)"
+            />
+            <path
+              d="M 60 150 L 150 130 L 240 115 L 330 95 L 420 80 L 510 55"
+              fill="none"
+              stroke="#3B82F6"
+              strokeWidth="3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            {/* Points */}
+            {[
+              { x: 60, y: 150 },
+              { x: 150, y: 130 },
+              { x: 240, y: 115 },
+              { x: 330, y: 95 },
+              { x: 420, y: 80 },
+              { x: 510, y: 55 },
+            ].map((p, i) => (
+              <circle key={i} cx={p.x} cy={p.y} r="5" fill="white" stroke="#3B82F6" strokeWidth="3" />
+            ))}
+            {/* X labels */}
+            {['Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'].map((m, i) => (
+              <text key={m} x={60 + i * 90} y="200" textAnchor="middle" fill="#64748B" fontSize="12" fontFamily="DM Sans" fontWeight="500">
+                {m}
+              </text>
+            ))}
+          </svg>
         </div>
 
-        <div className="ba-quick-actions">
-          <h3>Quick Actions</h3>
-          <div className="ba-quick-actions-list">
-            <button className="btn-primary">Add Dealer</button>
-            <button className="btn-secondary">View Reports</button>
-            <button className="btn-secondary">Manage Products</button>
+        {/* Top dealers */}
+        <div className="card ba-leaderboard-card">
+          <div className="ba-card-title">Top dealers this month</div>
+          <div className="ba-dealer-list">
+            {topDealers.map((d, i) => (
+              <div key={d.name} className="ba-dealer-row">
+                <div className={`ba-dealer-rank rank-${i + 1}`}>{i + 1}</div>
+                <div className="ba-dealer-info">
+                  <div className="ba-dealer-name">{d.name}</div>
+                  <div className="ba-dealer-sub">{d.sales} policies</div>
+                </div>
+                <div className="ba-dealer-revenue">{formatCompact(d.revenue)}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Pending approvals */}
+      <div className="card ba-approvals-card">
+        <div className="ba-card-title">Pending approvals</div>
+        <div className="ba-approval-list">
+          <div className="ba-approval-row">
+            <span className="badge badge-warning">KYC</span>
+            <span>2 dealer KYC reviews awaiting verification</span>
+            <button className="btn-ghost">Review &rarr;</button>
+          </div>
+          <div className="ba-approval-row">
+            <span className="badge badge-info">Withdrawal</span>
+            <span>\u20B968,400 withdrawal request from Croma Koramangala</span>
+            <button className="btn-ghost">Review &rarr;</button>
+          </div>
+          <div className="ba-approval-row">
+            <span className="badge badge-purple">Role change</span>
+            <span>3 agent role-change requests pending</span>
+            <button className="btn-ghost">Review &rarr;</button>
           </div>
         </div>
       </div>

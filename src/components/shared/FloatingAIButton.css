@@ -1,0 +1,66 @@
+.fab-ai {
+  position: fixed;
+  right: var(--space-6);
+  bottom: var(--space-6);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-5);
+  background: linear-gradient(135deg, #3B82F6 0%, #6366F1 50%, #8B5CF6 100%);
+  background-size: 200% 200%;
+  color: white;
+  border: none;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  box-shadow: 0 12px 28px rgba(59, 130, 246, 0.45), 0 4px 12px rgba(99, 102, 241, 0.25);
+  z-index: 150;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  animation: gradientShift 4s ease infinite;
+  min-height: 48px;
+}
+
+.fab-ai:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 32px rgba(59, 130, 246, 0.5), 0 6px 16px rgba(99, 102, 241, 0.3);
+}
+
+.fab-ai:active {
+  transform: translateY(0);
+}
+
+.fab-ai-sparkle {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.fab-ai-label {
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+.fab-ai-pulse {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, #3B82F6, #8B5CF6);
+  opacity: 0.5;
+  z-index: -1;
+  animation: fabPulse 2s ease-in-out infinite;
+}
+
+@keyframes fabPulse {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.08); opacity: 0; }
+}
+
+/* Mobile: lift above bottom nav */
+@media (max-width: 768px) {
+  .fab-ai {
+    right: var(--space-4);
+    bottom: calc(var(--bottom-nav-height) + var(--space-4));
+    padding: var(--space-3) var(--space-4);
+    font-size: var(--font-size-xs);
+  }
+}

@@ -3,6 +3,7 @@ import { useAppStore } from './store/useAppStore';
 import AppShell from './components/shell/AppShell';
 import BottomNav from './components/shell/BottomNav';
 import Sidebar from './components/shell/Sidebar';
+import FloatingAIButton from './components/shared/FloatingAIButton';
 import DemoShowcase from './components/demo/DemoShowcase';
 import Login from './components/auth/Login';
 import KycFlow from './components/kyc/KycFlow';
@@ -131,6 +132,7 @@ function AppContent() {
         </div>
       </div>
       <BottomNav />
+      <FloatingAIButton />
     </AppShell>
   );
 }

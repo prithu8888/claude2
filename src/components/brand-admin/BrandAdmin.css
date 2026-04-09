@@ -580,3 +580,255 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ── New spec-compliant dashboard (v2) ── */
+
+.ba-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+.ba-header .page-title { margin-bottom: var(--space-2); }
+.ba-header-actions { display: flex; gap: var(--space-3); }
+
+.ba-kpi-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-4);
+  margin-bottom: var(--space-8);
+}
+.ba-kpi { padding: var(--space-5); }
+.ba-kpi-label {
+  font-size: var(--font-size-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-secondary);
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: var(--space-2);
+}
+.ba-kpi-value {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  margin-bottom: var(--space-2);
+}
+.ba-kpi-delta {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+}
+.ba-kpi-delta.success { color: var(--success); }
+.ba-kpi-delta.error { color: var(--error); }
+
+.ba-ai-section {
+  margin-bottom: var(--space-8);
+  padding: var(--space-6);
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.06) 0%, rgba(139, 92, 246, 0.04) 100%);
+  border: 1px solid rgba(59, 130, 246, 0.15);
+  border-radius: var(--radius-xl);
+  position: relative;
+  overflow: hidden;
+}
+
+.ba-ai-section::before {
+  content: '';
+  position: absolute;
+  top: -40%;
+  right: -10%;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.12), transparent 60%);
+  pointer-events: none;
+}
+
+.ba-ai-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-5);
+  position: relative;
+  z-index: 1;
+}
+
+.ba-ai-title-group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.ba-ai-title-group h2 {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+
+.ba-ai-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-4);
+  position: relative;
+  z-index: 1;
+}
+
+.ba-ai-card {
+  padding: var(--space-5);
+  background: var(--surface-primary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  transition: all var(--transition-fast);
+}
+.ba-ai-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+
+.ba-ai-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ba-ai-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+.ba-ai-icon-warning { background: var(--warning-bg); color: var(--warning); }
+.ba-ai-icon-error { background: var(--error-bg); color: var(--error); }
+.ba-ai-icon-info { background: var(--accent-blue-bg); color: var(--accent-blue); }
+.ba-ai-icon-success { background: var(--success-bg); color: var(--success); }
+
+.ba-ai-card-title {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+
+.ba-ai-card-desc {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+
+.ba-ai-card-action {
+  align-self: flex-start;
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--accent-blue);
+  background: var(--accent-blue-bg-soft);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+}
+.ba-ai-card-action:hover { background: var(--accent-blue-bg); }
+
+.ba-split {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+.ba-card-title {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  margin-bottom: var(--space-5);
+}
+
+.ba-chart-card { padding: var(--space-6); }
+.ba-chart-svg { width: 100%; height: auto; }
+
+.ba-leaderboard-card { padding: var(--space-6); }
+
+.ba-dealer-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.ba-dealer-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  transition: background var(--transition-fast);
+}
+.ba-dealer-row:hover { background: var(--surface-tertiary); }
+
+.ba-dealer-rank {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  background: var(--surface-tertiary);
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+.ba-dealer-rank.rank-1 { background: rgba(245, 158, 11, 0.15); color: #F59E0B; }
+.ba-dealer-rank.rank-2 { background: rgba(148, 163, 184, 0.2); color: #64748B; }
+.ba-dealer-rank.rank-3 { background: rgba(180, 83, 9, 0.15); color: #B45309; }
+
+.ba-dealer-info { flex: 1; min-width: 0; }
+.ba-dealer-name {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ba-dealer-sub {
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+}
+.ba-dealer-revenue {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+}
+
+.ba-approvals-card { padding: var(--space-6); }
+
+.ba-approval-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.ba-approval-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--surface-tertiary);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+}
+.ba-approval-row > span:nth-child(2) {
+  flex: 1;
+  color: var(--text-primary);
+}
+
+@media (max-width: 1100px) {
+  .ba-kpi-row { grid-template-columns: repeat(2, 1fr); }
+  .ba-ai-grid { grid-template-columns: 1fr; }
+  .ba-split { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .ba-header { flex-direction: column; }
+  .ba-kpi-row { grid-template-columns: 1fr; }
+}
