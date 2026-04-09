@@ -1,85 +1,112 @@
 import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../../store/useAppStore';
 import { sales, commissions, getProductById } from '../../data/mockData';
+import { formatINR, t } from '../../i18n/strings';
+import AIBadge from '../shared/AIBadge';
 import './PromoterHome.css';
+
+function getGreeting(): 'morning' | 'afternoon' | 'evening' {
+  const h = new Date().getHours();
+  if (h < 12) return 'morning';
+  if (h < 17) return 'afternoon';
+  return 'evening';
+}
 
 export default function PromoterHome() {
   const navigate = useNavigate();
-  const { activeBrand, activeVertical } = useAppStore();
+  const { authUser, activeBrand, language } = useAppStore();
 
-  const recentSales = sales.slice(0, 4);
-  const totalEarnings = commissions
-    .filter((c) => c.status === 'paid')
-    .reduce((sum, c) => sum + c.amount, 0);
-  const pendingEarnings = commissions
-    .filter((c) => c.status === 'pending' || c.status === 'approved')
-    .reduce((sum, c) => sum + c.amount, 0);
+  const name = (authUser?.name ?? 'Amit').split(' ')[0];
+  const greetingKey = `home.greeting.${getGreeting()}` as const;
+
+  const recentSales = sales.slice(0, 3);
+  const todayEarnings = commissions.filter((c) => c.status === 'paid').reduce((a, b) => a + b.amount, 0) * 0.3;
+  const salesToday = 4;
+  const monthlyTarget = 80;
+  const monthlyDone = 47;
 
   return (
     <div className="promoter-home">
-      <div className="home-greeting">
-        <h2>Good morning, Amit!</h2>
-        <p className="home-subtitle">
-          {activeBrand} &middot; {activeVertical.replace(/-/g, ' ')}
-        </p>
-      </div>
+      <section className="home-greeting-block">
+        <div>
+          <div className="greeting-subtitle">{t(greetingKey, language)}</div>
+          <h1 className="greeting-name">{name}</h1>
+        </div>
+        <div className="home-brand-chip">
+          <span className="brand-dot" />
+          {activeBrand}
+        </div>
+      </section>
 
-      <div className="home-stats">
-        <div className="stat-card">
-          <span className="stat-value">{sales.length}</span>
-          <span className="stat-label">Total Sales</span>
+      <section className="home-ai-nudge">
+        <AIBadge label="Suggested for you" shimmer />
+        <div>
+          <strong>You\u2019ve sold 8 plans this week.</strong>
+          <span>2 more and you hit Silver tier with 15% commission bonus.</span>
         </div>
-        <div className="stat-card accent">
-          <span className="stat-value">
-            &#8377;{totalEarnings.toLocaleString('en-IN')}
-          </span>
-          <span className="stat-label">Earned</span>
-        </div>
-        <div className="stat-card">
-          <span className="stat-value">
-            &#8377;{pendingEarnings.toLocaleString('en-IN')}
-          </span>
-          <span className="stat-label">Pending</span>
-        </div>
-      </div>
+      </section>
 
-      <div className="home-actions">
-        <button className="btn-primary action-btn" onClick={() => navigate('/sell')}>
-          + New Sale
+      <section className="home-cta-wrap">
+        <button className="home-cta" onClick={() => navigate('/sell')}>
+          <div className="home-cta-content">
+            <div>
+              <div className="home-cta-label">{t('home.startNewSale', language)}</div>
+              <div className="home-cta-sub">Scan IMEI &middot; Pick plan &middot; Issue policy</div>
+            </div>
+            <div className="home-cta-icon">
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+              </svg>
+            </div>
+          </div>
         </button>
-        <button
-          className="btn-secondary action-btn"
-          onClick={() => navigate('/claims')}
-        >
-          File Claim
-        </button>
-      </div>
+      </section>
+
+      <section className="home-numbers">
+        <div className="home-stat">
+          <div className="home-stat-label">{t('home.salesToday', language)}</div>
+          <div className="home-stat-value">{salesToday}</div>
+        </div>
+        <div className="home-stat">
+          <div className="home-stat-label">{t('home.earningsToday', language)}</div>
+          <div className="home-stat-value">{formatINR(Math.round(todayEarnings))}</div>
+        </div>
+      </section>
+
+      <section className="home-target">
+        <div className="home-target-header">
+          <div>
+            <div className="home-target-label">{t('home.monthTarget', language)}</div>
+            <div className="home-target-value">{monthlyDone} / {monthlyTarget}</div>
+          </div>
+          <div className="home-target-pct">{Math.round((monthlyDone / monthlyTarget) * 100)}%</div>
+        </div>
+        <div className="home-target-bar">
+          <div className="home-target-fill" style={{ width: `${(monthlyDone / monthlyTarget) * 100}%` }} />
+        </div>
+      </section>
 
       <section className="home-section">
-        <div className="section-header">
-          <h3>Recent Sales</h3>
-          <button className="link-btn" onClick={() => navigate('/wallet')}>
-            View All
+        <div className="home-section-header">
+          <h3>{t('home.recentSales', language)}</h3>
+          <button className="link-btn" onClick={() => navigate('/transactions')}>
+            {t('common.viewAll', language)}
           </button>
         </div>
-        <div className="sales-list">
+        <div className="home-sales-list">
           {recentSales.map((sale) => {
             const product = getProductById(sale.productId);
             return (
-              <div key={sale.id} className="sale-row card">
-                <div className="sale-info">
-                  <span className="sale-product">
-                    {product?.name ?? 'Unknown Product'}
-                  </span>
-                  <span className="sale-date">{sale.date}</span>
+              <div key={sale.id} className="home-sale-row" onClick={() => navigate('/transactions')}>
+                <div className="home-sale-icon">&#128241;</div>
+                <div className="home-sale-info">
+                  <div className="home-sale-product">{product?.name ?? 'Unknown device'}</div>
+                  <div className="home-sale-date">{sale.date}</div>
                 </div>
-                <div className="sale-right">
-                  <span className="sale-amount">
-                    &#8377;{sale.commission.toLocaleString('en-IN')}
-                  </span>
-                  <span
-                    className={`badge ${sale.status === 'completed' ? 'badge-success' : 'badge-warning'}`}
-                  >
+                <div className="home-sale-right">
+                  <div className="home-sale-amount">+{formatINR(sale.commission)}</div>
+                  <span className={`badge ${sale.status === 'completed' ? 'badge-success' : 'badge-warning'}`}>
                     {sale.status}
                   </span>
                 </div>
@@ -89,31 +116,23 @@ export default function PromoterHome() {
         </div>
       </section>
 
-      <section className="home-section">
-        <div className="section-header">
-          <h3>Quick Links</h3>
-        </div>
-        <div className="quick-links">
-          <button className="quick-link card" onClick={() => navigate('/sell')}>
-            <span className="ql-icon">&#128722;</span>
-            <span>Sell</span>
-          </button>
-          <button className="quick-link card" onClick={() => navigate('/wallet')}>
-            <span className="ql-icon">&#128176;</span>
-            <span>Wallet</span>
-          </button>
-          <button className="quick-link card" onClick={() => navigate('/claims')}>
-            <span className="ql-icon">&#128203;</span>
-            <span>Claims</span>
-          </button>
-          <button
-            className="quick-link card"
-            onClick={() => navigate('/more')}
-          >
-            <span className="ql-icon">&#9776;</span>
-            <span>More</span>
-          </button>
-        </div>
+      <section className="home-quick-grid">
+        <button className="home-quick-link" onClick={() => navigate('/incentives')}>
+          <div className="home-quick-icon ql-blue">&#128176;</div>
+          <span>{t('home.myIncentives', language)}</span>
+        </button>
+        <button className="home-quick-link" onClick={() => navigate('/claims')}>
+          <div className="home-quick-icon ql-green">&#128203;</div>
+          <span>{t('home.fileClaim', language)}</span>
+        </button>
+        <button className="home-quick-link" onClick={() => navigate('/training')}>
+          <div className="home-quick-icon ql-purple">&#127891;</div>
+          <span>Training</span>
+        </button>
+        <button className="home-quick-link" onClick={() => navigate('/settings')}>
+          <div className="home-quick-icon ql-orange">&#128100;</div>
+          <span>Profile</span>
+        </button>
       </section>
     </div>
   );

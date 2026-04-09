@@ -1,0 +1,174 @@
+.demo-showcase {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  color: white;
+  overflow: hidden;
+  transition: background 1s ease;
+}
+
+.demo-bg-orbs {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.35;
+  animation: floatOrb 12s ease-in-out infinite;
+}
+.orb-1 { width: 300px; height: 300px; background: #3B82F6; top: -80px; left: -80px; }
+.orb-2 { width: 400px; height: 400px; background: #8B5CF6; bottom: -140px; right: -100px; animation-delay: -4s; }
+.orb-3 { width: 250px; height: 250px; background: #06B6D4; top: 40%; left: 60%; animation-delay: -8s; }
+
+@keyframes floatOrb {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -20px) scale(1.05); }
+  66% { transform: translate(-20px, 30px) scale(0.95); }
+}
+
+.demo-header {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-6) var(--space-8);
+}
+
+.demo-logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: -0.01em;
+}
+
+.demo-skip {
+  padding: var(--space-2) var(--space-5);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: white;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(8px);
+  border-radius: var(--radius-full);
+  transition: background var(--transition-fast);
+  min-height: 40px;
+}
+.demo-skip:hover { background: rgba(255, 255, 255, 0.22); }
+
+.demo-content {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  padding: 0 var(--space-12);
+  gap: var(--space-8);
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.demo-illustration-wrap {
+  display: flex;
+  justify-content: center;
+  animation: fadeInUp 600ms ease;
+}
+
+.demo-illustration {
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+  filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.2));
+}
+
+.demo-text {
+  animation: fadeInUp 600ms ease;
+  animation-delay: 100ms;
+  animation-fill-mode: both;
+}
+
+.demo-title {
+  font-size: var(--font-size-5xl);
+  font-weight: var(--font-weight-bold);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  margin-bottom: var(--space-4);
+}
+
+.demo-sub {
+  font-size: var(--font-size-lg);
+  opacity: 0.85;
+  max-width: 480px;
+}
+
+.demo-footer {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-6) var(--space-8);
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.demo-dots {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.demo-dot {
+  width: 28px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: var(--radius-full);
+  transition: all var(--transition-normal);
+}
+.demo-dot.active { background: white; width: 44px; }
+
+.demo-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-8);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: #1E1B4B;
+  background: white;
+  border-radius: var(--radius-full);
+  transition: all var(--transition-fast);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  min-height: 52px;
+}
+.demo-cta:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2); }
+
+.demo-cta-arrow {
+  transition: transform var(--transition-fast);
+}
+.demo-cta:hover .demo-cta-arrow { transform: translateX(4px); }
+
+/* Mobile */
+@media (max-width: 768px) {
+  .demo-content {
+    grid-template-columns: 1fr;
+    padding: 0 var(--space-6);
+    text-align: center;
+    gap: var(--space-6);
+  }
+  .demo-title { font-size: var(--font-size-3xl); }
+  .demo-sub { font-size: var(--font-size-base); margin: 0 auto; }
+  .demo-illustration { max-width: 320px; }
+  .demo-footer { padding: var(--space-4) var(--space-6); }
+  .demo-cta { padding: var(--space-3) var(--space-6); font-size: var(--font-size-sm); min-height: 48px; }
+  .demo-header { padding: var(--space-4) var(--space-6); }
+}
