@@ -1,0 +1,163 @@
+.tx-page {
+  padding: var(--space-8);
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.tx-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-6);
+  gap: var(--space-4);
+}
+.tx-header .page-title { margin-bottom: var(--space-2); }
+
+.tx-smart-filter {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  margin-bottom: var(--space-4);
+  border: 1px solid var(--accent-blue-bg);
+  background: linear-gradient(90deg, var(--accent-blue-bg-soft), var(--surface-primary));
+}
+
+.tx-smart-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: var(--font-size-sm);
+  color: var(--text-primary);
+  min-width: 0;
+}
+.tx-smart-input::placeholder { color: var(--text-tertiary); }
+
+.tx-filters {
+  display: flex;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+.tx-search { flex: 1; }
+.tx-status { max-width: 220px; }
+
+.tx-table {
+  padding: 0;
+  overflow: hidden;
+}
+
+.tx-row {
+  display: grid;
+  grid-template-columns: 140px 1fr 1.4fr 120px 120px 140px;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--border-subtle);
+  align-items: center;
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+.tx-row:hover { background: var(--surface-tertiary); }
+.tx-row.expanded { background: var(--accent-blue-bg-soft); }
+.tx-row:last-of-type { border-bottom: none; }
+
+.tx-row-head {
+  background: var(--surface-tertiary);
+  font-size: var(--font-size-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  font-weight: var(--font-weight-semibold);
+  cursor: default;
+}
+.tx-row-head:hover { background: var(--surface-tertiary); }
+
+.tx-cell-id {
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.tx-anomaly {
+  display: inline-block;
+  font-size: var(--font-size-xs);
+  color: var(--warning);
+  font-weight: var(--font-weight-semibold);
+}
+
+.tx-device {
+  color: var(--text-primary);
+  font-weight: var(--font-weight-medium);
+}
+.tx-plan-sub {
+  color: var(--text-secondary);
+  font-size: var(--font-size-xs);
+  margin-top: 2px;
+}
+
+.tx-amount {
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+}
+
+.tx-expanded {
+  padding: var(--space-6);
+  background: var(--surface-tertiary);
+  border-bottom: 1px solid var(--border-default);
+  animation: fadeInUp 200ms ease;
+}
+
+.tx-expanded-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: var(--space-6);
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
+.tx-expanded-grid > div > div:not(.tx-expanded-label) { margin-bottom: 4px; }
+
+.tx-expanded-label {
+  font-size: var(--font-size-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-tertiary);
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: var(--space-2);
+}
+
+.tx-anomaly-box {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+  padding: var(--space-4);
+  background: var(--warning-bg);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  color: var(--text-primary);
+}
+
+.tx-empty {
+  text-align: center;
+  padding: var(--space-12);
+}
+.tx-empty-icon { font-size: 48px; margin-bottom: var(--space-4); }
+.tx-empty-title { font-size: var(--font-size-lg); font-weight: var(--font-weight-semibold); margin-bottom: var(--space-2); }
+.tx-empty-sub { color: var(--text-secondary); margin-bottom: var(--space-5); }
+
+@media (max-width: 900px) {
+  .tx-page { padding: var(--space-4); }
+  .tx-header { flex-direction: column; align-items: flex-start; }
+  .tx-row { grid-template-columns: 1fr auto; gap: var(--space-2); }
+  .tx-row-head { display: none; }
+  .tx-row > div:nth-child(3),
+  .tx-row > div:nth-child(4) { grid-column: 1 / -1; }
+  .tx-expanded-grid { grid-template-columns: 1fr; }
+  .tx-filters { flex-direction: column; }
+  .tx-status { max-width: 100%; }
+}

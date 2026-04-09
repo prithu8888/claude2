@@ -4,22 +4,20 @@
   left: 0;
   bottom: 0;
   width: var(--sidebar-width);
-  background: var(--surface-primary);
-  border-right: 1px solid var(--border-default);
+  background: var(--brand-indigo);
+  border-right: 1px solid var(--brand-indigo-700);
   z-index: 90;
+  display: flex;
+  flex-direction: column;
   overflow-y: auto;
-  transition: width var(--transition-normal);
-}
-
-.sidebar.collapsed {
-  width: 64px;
 }
 
 .sidebar-nav {
   display: flex;
   flex-direction: column;
-  padding: var(--space-3);
-  gap: var(--space-1);
+  padding: var(--space-4);
+  gap: 2px;
+  flex: 1;
 }
 
 .sidebar-item {
@@ -28,29 +26,29 @@
   gap: var(--space-3);
   padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-md);
-  color: var(--text-secondary);
+  color: rgba(255, 255, 255, 0.7);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   transition: all var(--transition-fast);
   text-align: left;
   width: 100%;
 }
-
 .sidebar-item:hover {
-  background: var(--surface-secondary);
-  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.08);
+  color: white;
 }
-
 .sidebar-item.active {
-  background: var(--acko-purple-bg);
-  color: var(--acko-purple);
+  background: var(--accent-blue);
+  color: white;
   font-weight: var(--font-weight-semibold);
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.35);
 }
 
 .sidebar-icon {
-  font-size: 18px;
-  width: 24px;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
   flex-shrink: 0;
 }
 
@@ -60,6 +58,33 @@
   text-overflow: ellipsis;
 }
 
-.collapsed .sidebar-label {
-  display: none;
+.sidebar-footer {
+  padding: var(--space-4);
+  border-top: 1px solid var(--brand-indigo-700);
+}
+
+.sidebar-user-card {
+  padding: var(--space-5);
+  background: linear-gradient(135deg, var(--brand-indigo-700), var(--brand-indigo-600));
+  border-radius: var(--radius-lg);
+  color: white;
+}
+
+.sidebar-user-title {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: 2px;
+}
+
+.sidebar-user-sub {
+  font-size: var(--font-size-xs);
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: var(--space-3);
+}
+
+.sidebar-user-btn {
+  width: 100%;
+  padding: var(--space-2) var(--space-4);
+  min-height: 36px;
+  font-size: var(--font-size-xs);
 }
