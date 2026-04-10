@@ -3,6 +3,7 @@ import { useAppStore } from './store/useAppStore';
 import AppShell from './components/shell/AppShell';
 import BottomNav from './components/shell/BottomNav';
 import Sidebar from './components/shell/Sidebar';
+import FloatingAIButton from './components/shared/FloatingAIButton';
 import DemoShowcase from './components/demo/DemoShowcase';
 import Login from './components/auth/Login';
 import KycFlow from './components/kyc/KycFlow';
@@ -32,6 +33,8 @@ import Training from './components/training/Training';
 import AskMpos from './components/ask/AskMpos';
 import WhatsAppLog from './components/whatsapp/WhatsAppLog';
 import SettingsPage from './components/settings/SettingsPage';
+import BulkOnboarding from './components/bulk-onboarding/BulkOnboarding';
+import PlanConfigGenerator from './components/plan-config/PlanConfigGenerator';
 import './App.css';
 
 // Picks the right home component based on the active role
@@ -109,6 +112,8 @@ function AppContent() {
             {/* Admin surfaces (scoped) */}
             <Route path="/dealers" element={<BrandAdminDealers />} />
             <Route path="/users" element={<UserManagement />} />
+            <Route path="/bulk-onboarding" element={<BulkOnboarding />} />
+            <Route path="/plan-config" element={<PlanConfigGenerator />} />
             <Route path="/products" element={<BrandAdminProducts />} />
             <Route path="/sales-report" element={<BrandAdminSales />} />
             <Route path="/admin/claims" element={<BrandAdminClaims />} />
@@ -131,6 +136,7 @@ function AppContent() {
         </div>
       </div>
       <BottomNav />
+      <FloatingAIButton />
     </AppShell>
   );
 }

@@ -116,6 +116,35 @@ export default function PromoterHome() {
         </div>
       </section>
 
+      <section className="home-section">
+        <div className="home-section-header">
+          <h3>Powered by AI</h3>
+          <AIBadge shimmer label="AI" />
+        </div>
+        <div className="home-ai-grid">
+          <button className="home-ai-card home-ai-card-primary" onClick={() => navigate('/ask')}>
+            <div className="home-ai-card-icon">&#10022;</div>
+            <div className="home-ai-card-title">Ask MPOS</div>
+            <div className="home-ai-card-sub">Get answers, insights, and take actions in plain English</div>
+          </button>
+          <button className="home-ai-card" onClick={() => navigate('/training')}>
+            <div className="home-ai-card-icon">&#128104;&#8205;&#127891;</div>
+            <div className="home-ai-card-title">AI Sales Coach</div>
+            <div className="home-ai-card-sub">Personalised tips based on your sales performance</div>
+          </button>
+          <button className="home-ai-card" onClick={() => navigate('/claims/new')}>
+            <div className="home-ai-card-icon">&#128247;</div>
+            <div className="home-ai-card-title">Smart Claims</div>
+            <div className="home-ai-card-sub">Upload photos, AI checks quality & damage</div>
+          </button>
+          <button className="home-ai-card" onClick={() => navigate('/kyc')}>
+            <div className="home-ai-card-icon">&#128196;</div>
+            <div className="home-ai-card-title">AI KYC</div>
+            <div className="home-ai-card-sub">Complete your KYC in minutes with AI auto-fill</div>
+          </button>
+        </div>
+      </section>
+
       <section className="home-quick-grid">
         <button className="home-quick-link" onClick={() => navigate('/incentives')}>
           <div className="home-quick-icon ql-blue">&#128176;</div>
