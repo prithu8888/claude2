@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { networkUsers as seed, getParentName, type NetworkUser, type NetworkGroup } from './mockUsers';
 import { ToastProvider } from '../shared/Toast';
 import { useToast } from '../shared/toastContext';
@@ -11,6 +12,7 @@ import './DealerNetwork.css';
 type Tab = 'users' | 'add' | 'bulk' | 'movement';
 
 function DealerNetworkInner() {
+  const navigate = useNavigate();
   const { show } = useToast();
   const [users, setUsers] = useState<NetworkUser[]>(seed);
   const [tab, setTab] = useState<Tab>('users');
@@ -128,6 +130,19 @@ function DealerNetworkInner() {
                 </button>
               </div>
             </header>
+
+            <div className="dn-wizard-banner">
+              <div className="dn-wizard-banner-icon">\u{2728}</div>
+              <div className="dn-wizard-banner-body">
+                <div className="dn-wizard-banner-title">First-time setup wizard</div>
+                <div className="dn-wizard-banner-sub">
+                  Onboard your entire team at once \u2014 guided 6-step flow from upload to preview. Takes about 10 minutes.
+                </div>
+              </div>
+              <button className="dn-btn-primary" onClick={() => navigate('/setup-wizard')}>
+                Launch wizard \u2192
+              </button>
+            </div>
 
             <div className="dn-filters">
               <div className="dn-search-wrap">

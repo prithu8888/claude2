@@ -138,6 +138,14 @@ export default function BrandAdminDashboard() {
 
       {/* AI Onboarding quick actions */}
       <div className="ba-ai-onboarding">
+        <button className="ba-ai-tile" onClick={() => navigate('/setup-wizard')}>
+          <div className="ba-ai-tile-icon">&#10022;</div>
+          <div>
+            <div className="ba-ai-tile-title">First-time setup wizard</div>
+            <div className="ba-ai-tile-sub">6-step guided flow to onboard your entire team \u2014 ~10 minutes</div>
+          </div>
+          <AIBadge label="AI" />
+        </button>
         <button className="ba-ai-tile" onClick={() => navigate('/bulk-onboarding')}>
           <div className="ba-ai-tile-icon">&#128228;</div>
           <div>
