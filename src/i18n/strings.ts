@@ -76,7 +76,8 @@ export type StringKey =
   | 'nav.agents'
   | 'nav.wallet'
   | 'nav.bulkOnboarding'
-  | 'nav.planConfig';
+  | 'nav.planConfig'
+  | 'nav.dealerNetwork';
 
 type Dict = Record<StringKey, string>;
 
@@ -152,6 +153,7 @@ const en: Dict = {
   'nav.wallet': 'Wallet',
   'nav.bulkOnboarding': 'Bulk Onboarding',
   'nav.planConfig': 'Plan Config',
+  'nav.dealerNetwork': 'Dealer Network',
 };
 
 const hi: Partial<Dict> = {

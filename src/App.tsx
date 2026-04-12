@@ -35,6 +35,7 @@ import WhatsAppLog from './components/whatsapp/WhatsAppLog';
 import SettingsPage from './components/settings/SettingsPage';
 import BulkOnboarding from './components/bulk-onboarding/BulkOnboarding';
 import PlanConfigGenerator from './components/plan-config/PlanConfigGenerator';
+import DealerNetwork from './components/dealer-network/DealerNetwork';
 import './App.css';
 
 // Picks the right home component based on the active role
@@ -110,8 +111,10 @@ function AppContent() {
             <Route path="/whatsapp" element={<WhatsAppLog />} />
 
             {/* Admin surfaces (scoped) */}
-            <Route path="/dealers" element={<BrandAdminDealers />} />
+            <Route path="/dealers" element={<DealerNetwork />} />
+            <Route path="/dealers/legacy" element={<BrandAdminDealers />} />
             <Route path="/users" element={<UserManagement />} />
+            <Route path="/dealer-network" element={<DealerNetwork />} />
             <Route path="/bulk-onboarding" element={<BulkOnboarding />} />
             <Route path="/plan-config" element={<PlanConfigGenerator />} />
             <Route path="/products" element={<BrandAdminProducts />} />
