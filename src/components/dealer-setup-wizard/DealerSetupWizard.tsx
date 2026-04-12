@@ -7,38 +7,13 @@ type StepId = 1 | 2 | 3 | 4 | 5 | 6;
 const STEPS: { id: StepId; label: string }[] = [
   { id: 1, label: 'Welcome' },
   { id: 2, label: 'Upload' },
-  { id: 3, label: 'Map columns' },
+  { id: 3, label: 'Confirm details' },
   { id: 4, label: 'Fix errors' },
   { id: 5, label: 'Preview' },
   { id: 6, label: 'Done' },
 ];
 
 // ----- Mock data (inline per spec) -----
-
-interface MappingRow {
-  id: string;
-  column: string;
-  sample: string;
-  mapsTo: string | null;
-  confidence: 'MATCHED' | 'CHECK' | 'SKIPPED';
-  tooltip?: string;
-}
-
-const INITIAL_MAPPING: MappingRow[] = [
-  { id: 'r1', column: 'Xiaomi FSM Mobile number', sample: '9840513986', mapsTo: 'parent_phone', confidence: 'CHECK', tooltip: "This looks like a parent’s phone number but we’re not 100% certain. Please confirm." },
-  { id: 'r2', column: 'ASC', sample: 'PSC', mapsTo: 'group → xiaomi_psc', confidence: 'CHECK', tooltip: 'Inferred group type from column value. Please confirm this maps correctly.' },
-  { id: 'r3', column: 'ASC/Center Manager name', sample: 'Paul Singarayar', mapsTo: 'name', confidence: 'MATCHED' },
-  { id: 'r4', column: 'Xiaomi- PSC ID', sample: 'XMIN4413', mapsTo: 'partner_id', confidence: 'MATCHED' },
-  { id: 'r5', column: 'PSC Mobile Number', sample: '9489391717', mapsTo: 'phone', confidence: 'MATCHED' },
-  { id: 'r6', column: 'ASC Address', sample: 'I2K Mobiles, 37A, Madurai', mapsTo: 'address', confidence: 'MATCHED' },
-  { id: 'r7', column: 'ASC Pincode', sample: '625001', mapsTo: 'pincode', confidence: 'MATCHED' },
-  { id: 'r8', column: 'ASC emai id', sample: 'i2k.psc@radiant.com', mapsTo: 'email', confidence: 'MATCHED' },
-  { id: 'r9', column: 'ASP Name', sample: 'Radiant E Serve', mapsTo: null, confidence: 'SKIPPED', tooltip: 'No matching MPOS field found. This column will be ignored unless you map it manually.' },
-  { id: 'r10', column: 'ASP Mobile', sample: '9962817317', mapsTo: null, confidence: 'SKIPPED' },
-  { id: 'r11', column: 'Xiaomi FSM Name', sample: 'Mr. Boopathi', mapsTo: null, confidence: 'SKIPPED' },
-];
-
-const MPOS_FIELDS = ['name', 'phone', 'partner_id', 'parent_phone', 'address', 'pincode', 'email', 'group → xiaomi_psc', 'ignore this column'];
 
 interface ErrorRow {
   id: string;
@@ -54,21 +29,21 @@ const INITIAL_ERRORS: ErrorRow[] = [
     rowNumber: 4,
     name: 'Paul Singarayar',
     phone: '9840513986',
-    message: 'This phone number already exists in MPOS. A user with this number was previously created under a different partner. Use a different number or contact ACKO support.',
+    message: 'This phone number is already registered in MPOS under a different account. Please use a different number or remove this person.',
   },
   {
     id: 'e2',
     rowNumber: 17,
     name: 'Rajan Muthusamy',
     phone: '9789012345',
-    message: 'Parent phone 9876543210 not found in this file. Make sure the parent’s row is also in your file, or check the number.',
+    message: 'We couldn’t find this person’s manager in your file. Check that their manager’s phone number (9876543210) is also in the file.',
   },
   {
     id: 'e3',
     rowNumber: 31,
-    name: '',
+    name: 'Unknown',
     phone: '9812345678',
-    message: 'Name is required. This row is missing the dealer’s name.',
+    message: 'This person’s name is missing. Please add their name.',
   },
 ];
 
@@ -83,13 +58,13 @@ const DEALER_1 = {
       promoters: [
         { name: 'Kavya M', phone: '9834567890' },
         { name: 'Suresh R', phone: '9823456789' },
+        { name: 'Rahul D', phone: '9801234567' },
       ],
     },
     {
       name: 'Amit Singh',
       phone: '9812345678',
       promoters: [
-        { name: 'Rahul D', phone: '9801234567' },
         { name: 'Meera K', phone: '9890123456' },
         { name: 'Vijay S', phone: '9879012345' },
       ],
@@ -127,60 +102,36 @@ function Step1Welcome({ onNext }: { onNext: () => void }) {
   return (
     <div className="wiz-step-content">
       <h1 className="wiz-h1">Welcome to MPOS, Oppo India</h1>
-      <p className="wiz-sub">Let’s get your team set up. This should take about 10 minutes.</p>
+      <p className="wiz-sub">Let’s get your team set up. This takes about 10 minutes.</p>
 
       <div className="wiz-info-cards">
         <div className="wiz-info-card">
-          <div className="wiz-info-icon">
-            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
-              <circle cx="9" cy="7" r="4" />
-              <path d="M23 21v-2a4 4 0 00-3-3.87" />
-              <path d="M16 3.13a4 4 0 010 7.75" />
-            </svg>
-          </div>
-          <div className="wiz-info-title">Add your dealers, sub-dealers, and promoters</div>
+          <div className="wiz-info-title">Add your team</div>
           <div className="wiz-info-body">
-            All 3 levels need to be in the system before your team can sell plans.
+            Dealers, sub-dealers, and promoters all need to be in the system before anyone can sell.
           </div>
         </div>
         <div className="wiz-info-card">
-          <div className="wiz-info-icon">
-            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="9" y="3" width="6" height="4" rx="1" />
-              <rect x="3" y="15" width="6" height="4" rx="1" />
-              <rect x="15" y="15" width="6" height="4" rx="1" />
-              <path d="M12 7v4M6 15v-2h12v2" />
-            </svg>
-          </div>
-          <div className="wiz-info-title">Relationships matter</div>
+          <div className="wiz-info-title">Hierarchy matters</div>
           <div className="wiz-info-body">
-            Each promoter reports to a sub-dealer, each sub-dealer reports to a dealer. We’ll help you set this up correctly.
+            Promoters report to sub-dealers, sub-dealers report to dealers. We’ll make sure the structure is right.
           </div>
         </div>
         <div className="wiz-info-card">
-          <div className="wiz-info-icon">
-            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
-              <polyline points="14 2 14 8 20 8" />
-              <path d="M12 18v-6M9 15l3-3 3 3" />
-            </svg>
-          </div>
-          <div className="wiz-info-title">Upload any file format</div>
+          <div className="wiz-info-title">Any file works</div>
           <div className="wiz-info-body">
-            Send us your existing spreadsheet — any format, any column names. Our AI will do the mapping.
+            Upload whatever spreadsheet you already have. We’ll handle the rest.
           </div>
         </div>
       </div>
 
       <div className="wiz-note-box">
-        <strong>Before you start:</strong> ACKO has already configured your hierarchy structure
-        (Dealers &rarr; Sub-dealers &rarr; Promoters). You just need to add the people.
+        ACKO has already set up your account structure. You just need to add the people.
       </div>
 
       <div className="wiz-footer-solo">
         <button className="wiz-btn-primary wiz-btn-wide" onClick={onNext}>
-          Let’s get started &rarr;
+          Get started &rarr;
         </button>
       </div>
     </div>
@@ -189,7 +140,7 @@ function Step1Welcome({ onNext }: { onNext: () => void }) {
 
 // ----- Step 2: Upload -----
 
-const LOADING_MESSAGES = ['Reading your file…', 'Identifying columns…', 'Mapping to MPOS schema…'];
+const LOADING_MESSAGES = ['Reading your file…', 'Finding your team…', 'Almost done…'];
 
 function Step2Upload({ onBack, onNext }: { onBack: () => void; onNext: () => void }) {
   const [uploaded, setUploaded] = useState(false);
@@ -202,8 +153,8 @@ function Step2Upload({ onBack, onNext }: { onBack: () => void; onNext: () => voi
     const interval = setInterval(() => {
       msgIdx = Math.min(msgIdx + 1, LOADING_MESSAGES.length - 1);
       setLoadingText(LOADING_MESSAGES[msgIdx]);
-    }, 500);
-    const finish = setTimeout(onNext, 1500);
+    }, 666);
+    const finish = setTimeout(onNext, 2000);
     return () => {
       clearInterval(interval);
       clearTimeout(finish);
@@ -223,8 +174,8 @@ function Step2Upload({ onBack, onNext }: { onBack: () => void; onNext: () => voi
 
   return (
     <div className="wiz-step-content">
-      <h1 className="wiz-h1">Upload your team file</h1>
-      <p className="wiz-sub">Any Excel or CSV file works. We’ll handle the formatting.</p>
+      <h1 className="wiz-h1">Upload your team list</h1>
+      <p className="wiz-sub">Share the spreadsheet you use to track your dealers and promoters. Any format works.</p>
 
       {!uploaded ? (
         <>
@@ -238,9 +189,9 @@ function Step2Upload({ onBack, onNext }: { onBack: () => void; onNext: () => voi
               </svg>
             </div>
             <div className="wiz-dropzone-title">Drag your file here, or click to browse</div>
-            <div className="wiz-dropzone-sub">Supports .xlsx, .xls, .csv — any format</div>
+            <div className="wiz-dropzone-sub">Excel or CSV — any column names, any format</div>
           </label>
-          <button className="wiz-link-grey" type="button">Don’t have a file? Download our template instead</button>
+          <button className="wiz-link-grey" type="button">Download our template instead</button>
           <button className="wiz-simulate-btn" onClick={() => setUploaded(true)}>
             Simulate: Upload Xiaomi file
           </button>
@@ -249,10 +200,10 @@ function Step2Upload({ onBack, onNext }: { onBack: () => void; onNext: () => voi
         <div className="wiz-upload-success">
           <div className="wiz-upload-success-icon">&#10003;</div>
           <div className="wiz-upload-success-body">
-            <div className="wiz-upload-success-title">Xiaomi_onboarding_sample.xlsx uploaded</div>
-            <div className="wiz-upload-success-meta">11 columns &middot; 47 rows detected</div>
+            <div className="wiz-upload-success-title">Xiaomi_onboarding_sample.xlsx</div>
+            <div className="wiz-upload-success-meta">11 columns &middot; 47 rows</div>
           </div>
-          <button className="wiz-link-grey wiz-inline-link" onClick={() => setUploaded(false)}>Remove file</button>
+          <button className="wiz-link-grey wiz-inline-link" onClick={() => setUploaded(false)}>Remove</button>
         </div>
       )}
 
@@ -263,129 +214,138 @@ function Step2Upload({ onBack, onNext }: { onBack: () => void; onNext: () => voi
           disabled={!uploaded}
           onClick={() => setLoading(true)}
         >
-          Analyse with AI &rarr;
+          Analyse file &rarr;
         </button>
       </div>
     </div>
   );
 }
 
-// ----- Step 3: Column mapping -----
+// ----- Step 3: Confirm details (plain-English v2) -----
 
-function Step3Mapping({ onBack, onNext }: { onBack: () => void; onNext: () => void }) {
-  const [rows, setRows] = useState<MappingRow[]>(INITIAL_MAPPING);
+// Options available for the two confirmation questions.
+// We keep the list of columns from the source file for Q1 "who's the manager?"
+// and a simple staff-type list for Q2.
+const SOURCE_COLUMNS = [
+  'Xiaomi FSM Mobile number',
+  'PSC Mobile Number',
+  'Xiaomi- PSC ID',
+  'ASC/Center Manager name',
+  'ASC Address',
+  'ASC emai id',
+  'ASP Mobile',
+];
 
-  // Sort: amber first, then matched, then skipped
-  const orderedRows = [...rows].sort((a, b) => {
-    const order = { CHECK: 0, MATCHED: 1, SKIPPED: 2 };
-    return order[a.confidence] - order[b.confidence];
-  });
+const STAFF_TYPES = ['Dealer', 'Sub-dealer', 'Promoter', 'Service Center staff', 'Mixed — file has multiple types'];
 
-  const counts = {
-    matched: rows.filter((r) => r.confidence === 'MATCHED').length,
-    check: rows.filter((r) => r.confidence === 'CHECK').length,
-    skipped: rows.filter((r) => r.confidence === 'SKIPPED').length,
-  };
-
-  const handleMapIt = (id: string, field: string) => {
-    setRows((prev) => prev.map((r) => (r.id === id ? { ...r, mapsTo: field, confidence: 'MATCHED' as const } : r)));
-  };
-
-  const handleChange = (id: string, field: string) => {
-    if (field === 'ignore this column') {
-      setRows((prev) => prev.map((r) => (r.id === id ? { ...r, mapsTo: null, confidence: 'SKIPPED' as const } : r)));
-    } else {
-      setRows((prev) => prev.map((r) => (r.id === id ? { ...r, mapsTo: field, confidence: 'MATCHED' as const } : r)));
-    }
-  };
+function Step3Confirm({ onBack, onNext }: { onBack: () => void; onNext: () => void }) {
+  const [managerColumn, setManagerColumn] = useState('Xiaomi FSM Mobile number');
+  const [staffType, setStaffType] = useState('Service Center staff');
+  const [openPicker, setOpenPicker] = useState<null | 'manager' | 'staff'>(null);
 
   return (
-    <div className="wiz-step-content wiz-step-wide">
-      <h1 className="wiz-h1">Review AI column mapping</h1>
-      <p className="wiz-sub">
-        We’ve mapped your columns to MPOS fields. Check the amber rows — everything else looks good.
-      </p>
+    <div className="wiz-step-content">
+      <h1 className="wiz-h1">Does this look right?</h1>
+      <p className="wiz-sub">We read your file and found your team. Just confirm a couple of things.</p>
 
-      <div className="wiz-summary-pills">
-        <span className="wiz-pill wiz-pill-green">{counts.matched} columns mapped automatically</span>
-        <span className="wiz-pill wiz-pill-amber">{counts.check} columns need your review</span>
-        <span className="wiz-pill wiz-pill-grey">{counts.skipped === 0 ? 'No columns skipped' : `${counts.skipped} columns skipped`}</span>
+      {/* Section A — What we found (green tinted) */}
+      <div className="wiz-found-card">
+        <div className="wiz-found-row">
+          <div className="wiz-found-icon wiz-found-icon-people">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+              <circle cx="9" cy="7" r="4" />
+              <path d="M23 21v-2a4 4 0 00-3-3.87" />
+              <path d="M16 3.13a4 4 0 010 7.75" />
+            </svg>
+          </div>
+          <div><strong>47 people</strong> to add</div>
+        </div>
+        <div className="wiz-found-row">
+          <div className="wiz-found-icon wiz-found-icon-hierarchy">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="9" y="3" width="6" height="4" rx="1" />
+              <rect x="3" y="15" width="6" height="4" rx="1" />
+              <rect x="15" y="15" width="6" height="4" rx="1" />
+              <path d="M12 7v4M6 15v-2h12v2" />
+            </svg>
+          </div>
+          <div><strong>3 dealers</strong>, <strong>8 sub-dealers</strong>, <strong>36 promoters</strong></div>
+        </div>
+        <div className="wiz-found-row">
+          <div className="wiz-found-icon wiz-found-icon-check">&#10003;</div>
+          <div>Phone numbers, names, and addresses found</div>
+        </div>
+        <div className="wiz-found-note">No action needed here — we’ve got this covered.</div>
       </div>
 
-      <div className="wiz-table-wrap">
-        <table className="wiz-table">
-          <thead>
-            <tr>
-              <th>Your column</th>
-              <th>Sample data</th>
-              <th>Maps to</th>
-              <th>Confidence</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {orderedRows.map((r) => (
-              <tr key={r.id} className={`wiz-row wiz-row-${r.confidence.toLowerCase()}`}>
-                <td className="wiz-col-column">{r.column}</td>
-                <td className="wiz-col-sample">{r.sample}</td>
-                <td className="wiz-col-target">
-                  {r.mapsTo ? (
-                    <select
-                      className="wiz-inline-select"
-                      value={r.mapsTo}
-                      onChange={(e) => handleChange(r.id, e.target.value)}
-                    >
-                      {!MPOS_FIELDS.includes(r.mapsTo) && <option value={r.mapsTo}>{r.mapsTo}</option>}
-                      {MPOS_FIELDS.map((f) => (
-                        <option key={f} value={f}>{f}</option>
-                      ))}
-                    </select>
-                  ) : (
-                    <span className="wiz-not-mapped">— not mapped</span>
-                  )}
-                </td>
-                <td>
-                  <span className={`wiz-conf wiz-conf-${r.confidence.toLowerCase()}`}>
-                    {r.confidence}
-                  </span>
-                  {r.tooltip && (
-                    <span className="wiz-tooltip-wrap">
-                      <span className="wiz-tooltip-icon">?</span>
-                      <span className="wiz-tooltip">{r.tooltip}</span>
-                    </span>
-                  )}
-                </td>
-                <td className="wiz-col-action">
-                  {r.confidence === 'SKIPPED' ? (
-                    <button className="wiz-link-blue" onClick={() => handleMapIt(r.id, 'name')}>Map it</button>
-                  ) : r.confidence === 'CHECK' ? (
-                    <select
-                      className="wiz-inline-select"
-                      value={r.mapsTo ?? ''}
-                      onChange={(e) => handleChange(r.id, e.target.value)}
-                    >
-                      {MPOS_FIELDS.map((f) => (
-                        <option key={f} value={f}>{f}</option>
-                      ))}
-                    </select>
-                  ) : (
-                    <button className="wiz-link-grey">Change</button>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      {/* Section B — Just confirm these 2 things */}
+      <div className="wiz-confirm-card">
+        <div className="wiz-confirm-title">Just confirm these 2 things</div>
 
-      <div className="wiz-info-note">
-        Skipped columns will not be imported. This is fine — MPOS only needs the mapped fields.
+        {/* Item 1 */}
+        <div className="wiz-confirm-item">
+          <div className="wiz-confirm-question">Who is each person’s manager?</div>
+          <div className="wiz-confirm-context">This tells us who reports to whom in your hierarchy.</div>
+          <div className="wiz-confirm-answer">
+            <span className="wiz-answer-tag">
+              <span className="wiz-answer-check">&#10003;</span>
+              Using: {managerColumn}
+            </span>
+            <button className="wiz-link-grey" onClick={() => setOpenPicker(openPicker === 'manager' ? null : 'manager')}>
+              {openPicker === 'manager' ? 'Close' : 'Change \u2192'}
+            </button>
+          </div>
+          {openPicker === 'manager' && (
+            <div className="wiz-picker">
+              {SOURCE_COLUMNS.map((c) => (
+                <button
+                  key={c}
+                  className={`wiz-picker-option ${managerColumn === c ? 'selected' : ''}`}
+                  onClick={() => { setManagerColumn(c); setOpenPicker(null); }}
+                >
+                  {c}
+                  {managerColumn === c && <span className="wiz-answer-check">&#10003;</span>}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Item 2 */}
+        <div className="wiz-confirm-item">
+          <div className="wiz-confirm-question">What type of staff are in this file?</div>
+          <div className="wiz-confirm-context">This determines what they can do in MPOS.</div>
+          <div className="wiz-confirm-answer">
+            <span className="wiz-answer-tag">
+              <span className="wiz-answer-check">&#10003;</span>
+              {staffType}
+            </span>
+            <button className="wiz-link-grey" onClick={() => setOpenPicker(openPicker === 'staff' ? null : 'staff')}>
+              {openPicker === 'staff' ? 'Close' : 'Change \u2192'}
+            </button>
+          </div>
+          {openPicker === 'staff' && (
+            <div className="wiz-picker">
+              {STAFF_TYPES.map((t) => (
+                <button
+                  key={t}
+                  className={`wiz-picker-option ${staffType === t ? 'selected' : ''}`}
+                  onClick={() => { setStaffType(t); setOpenPicker(null); }}
+                >
+                  {t}
+                  {staffType === t && <span className="wiz-answer-check">&#10003;</span>}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="wiz-footer">
         <button className="wiz-btn-ghost" onClick={onBack}>&larr; Back</button>
         <button className="wiz-btn-primary" onClick={onNext}>
-          Confirm mapping and validate &rarr;
+          Looks right, continue &rarr;
         </button>
       </div>
     </div>
@@ -429,15 +389,20 @@ function Step4Errors({ onBack, onNext }: { onBack: () => void; onNext: () => voi
 
   return (
     <div className="wiz-step-content">
-      <h1 className="wiz-h1">Almost there — fix these errors</h1>
-      <p className="wiz-sub">
-        {readyCount} rows are ready. {unresolvedCount > 0 ? `${unresolvedCount} rows need attention before we can create the accounts.` : 'All errors resolved.'}
-      </p>
+      <h1 className="wiz-h1">Almost ready — {unresolvedCount} {unresolvedCount === 1 ? 'thing needs' : 'things need'} your attention</h1>
+      <p className="wiz-sub">Fix or remove these rows, then we’re good to go.</p>
 
       <div className="wiz-green-summary">
         <span className="wiz-green-summary-icon">&#10003;</span>
-        {readyCount} rows will be created successfully
+        {readyCount} rows are ready to be created
       </div>
+
+      {allResolved && errors.length > 0 && (
+        <div className="wiz-all-sorted-bar">
+          <span className="wiz-green-summary-icon">&#10003;</span>
+          All sorted — {readyCount} rows ready to create
+        </div>
+      )}
 
       {errors.length > 0 && (
         <div className={`wiz-errors-section ${allResolved ? 'all-resolved' : ''}`}>
@@ -551,16 +516,14 @@ function Step5Preview({ onBack, onNext }: { onBack: () => void; onNext: () => vo
 
   return (
     <div className="wiz-step-content wiz-step-wide">
-      <h1 className="wiz-h1">Review your hierarchy</h1>
-      <p className="wiz-sub">
-        This is what we’re about to create. Check that everything looks right before we commit.
-      </p>
+      <h1 className="wiz-h1">Your team, ready to go</h1>
+      <p className="wiz-sub">This is what we’re about to create. Take a look before we commit.</p>
 
       <div className="wiz-stats-row">
         <span className="wiz-stat-pill wiz-stat-blue">3 Dealers</span>
         <span className="wiz-stat-pill wiz-stat-teal">8 Sub-dealers</span>
-        <span className="wiz-stat-pill wiz-stat-purple">36 Promoters</span>
-        <span className="wiz-stat-pill wiz-stat-grey">47 Total users</span>
+        <span className="wiz-stat-pill wiz-stat-purple">33 Promoters</span>
+        <span className="wiz-stat-pill wiz-stat-grey">44 Total</span>
       </div>
 
       <div className="wiz-tree-toolbar">
@@ -586,7 +549,7 @@ function Step5Preview({ onBack, onNext }: { onBack: () => void; onNext: () => vo
             phone="9767654321"
             expanded={expanded.has('d2') || allExpanded}
             onToggle={() => toggle('d2')}
-            count="3 sub-dealers, 14 promoters"
+            count="5 sub-dealers, 14 promoters"
           />
           <TreeNode
             type="dealer"
@@ -594,7 +557,7 @@ function Step5Preview({ onBack, onNext }: { onBack: () => void; onNext: () => vo
             phone="9656543210"
             expanded={expanded.has('d3') || allExpanded}
             onToggle={() => toggle('d3')}
-            count="3 sub-dealers, 14 promoters"
+            count="5 sub-dealers, 14 promoters"
           />
         </div>
 
@@ -633,10 +596,12 @@ function Step5Preview({ onBack, onNext }: { onBack: () => void; onNext: () => vo
         )}
       </div>
 
+      <p className="wiz-tree-note">Everything looks correct? Once you confirm, we’ll create all 44 accounts.</p>
+
       <div className="wiz-footer">
         <button className="wiz-btn-ghost" onClick={onBack}>&larr; Back</button>
         <button className="wiz-btn-primary wiz-btn-large" onClick={onNext}>
-          Create 47 users &rarr;
+          Create 44 accounts &rarr;
         </button>
       </div>
     </div>
@@ -678,7 +643,7 @@ function Step6Done({ onGoToDashboard }: { onGoToDashboard: () => void }) {
     <div className="wiz-step-content">
       <div className="wiz-done-banner">
         <span className="wiz-done-banner-icon">&#10003;</span>
-        47 users created successfully
+        44 accounts created
       </div>
 
       <div className="wiz-checkmark-anim">
@@ -689,34 +654,33 @@ function Step6Done({ onGoToDashboard }: { onGoToDashboard: () => void }) {
         </div>
       </div>
 
-      <h1 className="wiz-h1 wiz-h1-center">Your team is ready to sell</h1>
+      <h1 className="wiz-h1 wiz-h1-center">Your team is live</h1>
       <p className="wiz-sub wiz-sub-center">
-        All dealers, sub-dealers, and promoters have been added to MPOS.
-        They can now log in and start issuing plans.
+        44 dealers, sub-dealers, and promoters are now in MPOS and can start selling.
       </p>
 
       <div className="wiz-done-cards">
         <div className="wiz-done-card">
-          <div className="wiz-done-card-title">Share login instructions</div>
-          <div className="wiz-done-card-body">Send your team their MPOS login details.</div>
-          <button className="wiz-btn-secondary wiz-done-card-btn">Download onboarding guide</button>
+          <div className="wiz-done-card-title">Tell your team</div>
+          <div className="wiz-done-card-body">Let them know they can log into MPOS now.</div>
+          <button className="wiz-btn-secondary wiz-done-card-btn">Download login instructions</button>
         </div>
         <div className="wiz-done-card wiz-done-card-primary">
           <div className="wiz-done-card-title">View your team</div>
-          <div className="wiz-done-card-body">See all users in the dashboard.</div>
+          <div className="wiz-done-card-body">See everyone in the dashboard.</div>
           <button className="wiz-btn-primary wiz-done-card-btn" onClick={onGoToDashboard}>
             Go to dashboard &rarr;
           </button>
         </div>
         <div className="wiz-done-card">
-          <div className="wiz-done-card-title">Add more users later</div>
-          <div className="wiz-done-card-body">You can always add individual users or upload another file from the dashboard.</div>
+          <div className="wiz-done-card-title">Add more later</div>
+          <div className="wiz-done-card-body">You can add individual users or upload another file anytime.</div>
           <button className="wiz-btn-secondary wiz-done-card-btn">Learn how</button>
         </div>
       </div>
 
       <div className="wiz-done-summary">
-        Created: 44 dealers/sub-dealers/promoters &middot; Skipped: 3 rows (download) &middot; Time taken: 4 minutes
+        44 created &middot; 3 skipped &middot; Completed in 6 minutes
       </div>
     </div>
   );
@@ -742,7 +706,7 @@ export default function DealerSetupWizard() {
       }
       setCurrent(to);
       setTransitioning(false);
-    }, 300);
+    }, 280);
   };
 
   useEffect(() => () => {
@@ -766,7 +730,7 @@ export default function DealerSetupWizard() {
         <div className={`wiz-page ${transitioning ? (direction === 'forward' ? 'out-left' : 'out-right') : 'in'}`}>
           {current === 1 && <Step1Welcome onNext={() => next(2)} />}
           {current === 2 && <Step2Upload onBack={() => back(1)} onNext={() => next(3)} />}
-          {current === 3 && <Step3Mapping onBack={() => back(2)} onNext={() => next(4)} />}
+          {current === 3 && <Step3Confirm onBack={() => back(2)} onNext={() => next(4)} />}
           {current === 4 && <Step4Errors onBack={() => back(3)} onNext={() => next(5)} />}
           {current === 5 && <Step5Preview onBack={() => back(4)} onNext={() => next(6)} />}
           {current === 6 && <Step6Done onGoToDashboard={() => navigate('/dealer-network')} />}

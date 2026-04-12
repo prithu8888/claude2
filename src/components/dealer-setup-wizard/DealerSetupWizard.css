@@ -151,9 +151,9 @@
 }
 
 .wiz-page {
-  max-width: 720px;
+  max-width: 680px;
   width: 100%;
-  animation: wizIn 300ms ease;
+  animation: wizIn 280ms ease;
 }
 
 .wiz-step-content.wiz-step-wide {
@@ -161,13 +161,13 @@
 }
 
 .wiz-page.out-left {
-  animation: wizOutLeft 300ms ease forwards;
+  animation: wizOutLeft 280ms ease forwards;
 }
 .wiz-page.out-right {
-  animation: wizOutRight 300ms ease forwards;
+  animation: wizOutRight 280ms ease forwards;
 }
 .wiz-page.in {
-  animation: wizIn 300ms ease;
+  animation: wizIn 280ms ease;
 }
 
 @keyframes wizIn {
@@ -214,9 +214,9 @@
 }
 
 .wiz-info-card {
-  padding: 20px;
-  background: #F3F8FD;
-  border-left: 3px solid var(--wiz-blue);
+  padding: 18px;
+  background: white;
+  border: 0.5px solid var(--wiz-border);
   border-radius: 8px;
 }
 
@@ -224,13 +224,12 @@
   width: 36px;
   height: 36px;
   border-radius: 8px;
-  background: white;
-  color: var(--wiz-blue);
+  background: var(--wiz-blue);
+  color: white;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 12px;
-  border: 1px solid rgba(24, 95, 165, 0.2);
 }
 
 .wiz-info-title {
@@ -978,6 +977,179 @@
   font-size: 12px;
   color: var(--wiz-grey-text);
   text-align: center;
+}
+
+/* ========== Step 3 v2 — Confirm details (plain English) ========== */
+
+.wiz-found-card {
+  padding: 20px 22px;
+  background: var(--wiz-green-bg);
+  border: 0.5px solid rgba(59, 109, 17, 0.2);
+  border-radius: 8px;
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.wiz-found-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  color: var(--wiz-text);
+}
+
+.wiz-found-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--wiz-green);
+  flex-shrink: 0;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.wiz-found-note {
+  margin-top: 8px;
+  padding-top: 10px;
+  border-top: 0.5px dashed rgba(59, 109, 17, 0.25);
+  font-size: 12px;
+  color: var(--wiz-green);
+  font-style: italic;
+}
+
+.wiz-confirm-card {
+  padding: 20px 22px;
+  background: white;
+  border: 0.5px solid var(--wiz-border);
+  border-left: 3px solid var(--wiz-blue);
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.wiz-confirm-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--wiz-grey-text);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 16px;
+}
+
+.wiz-confirm-item {
+  padding: 14px 0;
+  border-top: 0.5px solid var(--wiz-border-soft);
+}
+.wiz-confirm-item:first-of-type { border-top: none; padding-top: 0; }
+
+.wiz-confirm-question {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--wiz-navy);
+  margin-bottom: 4px;
+}
+
+.wiz-confirm-context {
+  font-size: 13px;
+  color: var(--wiz-grey-text);
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+
+.wiz-confirm-answer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.wiz-answer-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  background: #EAF2FB;
+  color: var(--wiz-blue);
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.wiz-answer-check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--wiz-green);
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
+}
+
+.wiz-picker {
+  margin-top: 10px;
+  background: #F5F5F3;
+  border: 0.5px solid var(--wiz-border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.wiz-picker-option {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 10px 14px;
+  background: none;
+  border: none;
+  border-bottom: 0.5px solid var(--wiz-border-soft);
+  font-size: 13px;
+  text-align: left;
+  color: var(--wiz-text);
+  cursor: pointer;
+  transition: background 150ms ease;
+  font-family: inherit;
+}
+.wiz-picker-option:last-child { border-bottom: none; }
+.wiz-picker-option:hover { background: white; color: var(--wiz-blue); }
+.wiz-picker-option.selected { background: #EAF2FB; color: var(--wiz-blue); font-weight: 600; }
+
+/* ========== Step 4 v2 — All sorted bar ========== */
+
+.wiz-all-sorted-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 18px;
+  background: var(--wiz-green);
+  color: white;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  animation: wizInFast 300ms ease;
+}
+.wiz-all-sorted-bar .wiz-green-summary-icon {
+  background: white;
+  color: var(--wiz-green);
+}
+
+/* ========== Step 5 v2 — tree note ========== */
+
+.wiz-tree-note {
+  text-align: center;
+  font-size: 13px;
+  color: var(--wiz-grey-text);
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 /* ========== Responsive ========== */
