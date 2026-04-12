@@ -45,10 +45,10 @@ export default function BrandInsights() {
 
   const typeIcon = (type: string) => {
     switch (type) {
-      case 'trend': return '\u2191';
-      case 'alert': return '\u26A0';
-      case 'recommendation': return '\u2728';
-      default: return '\u2139';
+      case 'trend': return '↑';
+      case 'alert': return '⚠';
+      case 'recommendation': return '✨';
+      default: return 'ℹ';
     }
   };
 

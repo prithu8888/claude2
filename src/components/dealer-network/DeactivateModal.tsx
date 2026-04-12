@@ -62,16 +62,16 @@ export default function DeactivateModal({ users, target, onClose, onConfirm }: P
         <div className="dn-modal-header">
           <div>
             <div className="dn-modal-title">Review impact before deactivating</div>
-            <div className="dn-modal-sub">{target.name} \u00b7 {target.group}</div>
+            <div className="dn-modal-sub">{target.name} · {target.group}</div>
           </div>
-          <button className="dn-close" onClick={onClose} aria-label="Close">\u2715</button>
+          <button className="dn-close" onClick={onClose} aria-label="Close">✕</button>
         </div>
 
         <div className="dn-modal-body">
           {stage === 'review' && (
             <>
               <div className="dn-warn-banner">
-                <span>\u26A0</span>
+                <span>⚠</span>
                 <div>
                   <strong>This change affects other users in your network.</strong>
                   <div style={{ marginTop: 4 }}>
@@ -83,7 +83,7 @@ export default function DeactivateModal({ users, target, onClose, onConfirm }: P
               </div>
 
               <div className="dn-impact-box">
-                Pick how you\u2019d like to handle their downstream users. You can auto-reassign all of them to another active {target.group.toLowerCase()}, handle it manually later, or deactivate without reassignment.
+                Pick how you’d like to handle their downstream users. You can auto-reassign all of them to another active {target.group.toLowerCase()}, handle it manually later, or deactivate without reassignment.
                 <div className="dn-impact-stats">
                   <div className="dn-impact-stat">
                     <strong>{directChildren.length}</strong>
@@ -109,7 +109,7 @@ export default function DeactivateModal({ users, target, onClose, onConfirm }: P
                       <div>
                         <div className="dn-user-name">{s.user.name}</div>
                         <div className="dn-user-sub">
-                          {s.user.phone} \u00b7 {s.currentChildren} direct report{s.currentChildren !== 1 ? 's' : ''}
+                          {s.user.phone} · {s.currentChildren} direct report{s.currentChildren !== 1 ? 's' : ''}
                         </div>
                       </div>
                     </div>
@@ -133,17 +133,17 @@ export default function DeactivateModal({ users, target, onClose, onConfirm }: P
                     Auto-reassign to {topSuggestion?.user.name ?? 'top suggestion'}
                     <small>Moves all {directChildren.length} direct report{directChildren.length !== 1 ? 's' : ''} to the recommended dealer</small>
                   </div>
-                  <span>\u2192</span>
+                  <span>→</span>
                 </button>
                 <button
                   className="dn-option-btn"
                   onClick={() => { setChosenOption('manual'); setStage('confirming'); }}
                 >
                   <div>
-                    I\u2019ll handle reassignment manually
+                    I’ll handle reassignment manually
                     <small>Children keep their current parent; you can reassign them one-by-one</small>
                   </div>
-                  <span>\u2192</span>
+                  <span>→</span>
                 </button>
                 <button
                   className="dn-option-btn danger"
@@ -151,9 +151,9 @@ export default function DeactivateModal({ users, target, onClose, onConfirm }: P
                 >
                   <div>
                     Deactivate without reassigning
-                    <small>Not recommended \u2014 downstream users will have no active parent</small>
+                    <small>Not recommended — downstream users will have no active parent</small>
                   </div>
-                  <span>\u2192</span>
+                  <span>→</span>
                 </button>
               </div>
             </>
@@ -162,7 +162,7 @@ export default function DeactivateModal({ users, target, onClose, onConfirm }: P
           {stage === 'confirming' && (
             <div>
               <div className="dn-warn-banner">
-                <span>\u26A0</span>
+                <span>⚠</span>
                 <div>
                   <strong>Confirm deactivation</strong>
                   <div style={{ marginTop: 4 }}>
@@ -173,7 +173,7 @@ export default function DeactivateModal({ users, target, onClose, onConfirm }: P
                     )}
                     {chosenOption === 'manual' && (
                       <>
-                        Deactivate <strong>{target.name}</strong>. You\u2019ll handle the {directChildren.length} affected user{directChildren.length !== 1 ? 's' : ''} manually.
+                        Deactivate <strong>{target.name}</strong>. You’ll handle the {directChildren.length} affected user{directChildren.length !== 1 ? 's' : ''} manually.
                       </>
                     )}
                     {chosenOption === 'none' && (
@@ -185,7 +185,7 @@ export default function DeactivateModal({ users, target, onClose, onConfirm }: P
                 </div>
               </div>
               <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--dn-text-secondary)', marginTop: 'var(--space-4)' }}>
-                This action can be reversed \u2014 reactivating the user will restore all current hierarchy links.
+                This action can be reversed — reactivating the user will restore all current hierarchy links.
               </p>
             </div>
           )}
@@ -198,7 +198,7 @@ export default function DeactivateModal({ users, target, onClose, onConfirm }: P
             <>
               <button className="dn-btn-ghost" onClick={() => setStage('review')} disabled={loading}>Back</button>
               <button className="dn-btn-danger" onClick={confirm} disabled={loading}>
-                {loading ? <><Spinner size={14} /> Deactivating\u2026</> : `Confirm & deactivate`}
+                {loading ? <><Spinner size={14} /> Deactivating…</> : `Confirm & deactivate`}
               </button>
             </>
           )}

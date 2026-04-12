@@ -22,7 +22,7 @@ const aiAlerts: AIAlert[] = [
   },
   {
     type: 'anomaly',
-    title: 'Croma Koramangala \u2014 0 sales in 14 days',
+    title: 'Croma Koramangala — 0 sales in 14 days',
     description: 'Normally ranks top 5. Last sale was 12 March. Dealer may need outreach.',
     action: 'Contact dealer',
   },
@@ -34,9 +34,9 @@ const aiAlerts: AIAlert[] = [
   },
   {
     type: 'trend',
-    title: 'Fraud Gate prevented \u20B94.2L exposure this week',
+    title: 'Fraud Gate prevented ₹4.2L exposure this week',
     description: 'Auto-flagged 17 suspicious claims. 9 were confirmed fraud. Model precision is 92%.',
-    metric: '+\u20B94.2L saved',
+    metric: '+₹4.2L saved',
   },
 ];
 
@@ -49,8 +49,8 @@ const topDealers = [
 ];
 
 function formatCompact(amount: number): string {
-  if (amount >= 10000000) return `\u20B9${(amount / 10000000).toFixed(1)}Cr`;
-  if (amount >= 100000) return `\u20B9${(amount / 100000).toFixed(1)}L`;
+  if (amount >= 10000000) return `₹${(amount / 10000000).toFixed(1)}Cr`;
+  if (amount >= 100000) return `₹${(amount / 100000).toFixed(1)}L`;
   return formatINR(amount);
 }
 
@@ -59,10 +59,10 @@ export default function BrandAdminDashboard() {
 
   const alertTypeMeta = (type: AIAlert['type']) => {
     switch (type) {
-      case 'alert': return { emoji: '\u26A0', color: 'warning' };
-      case 'anomaly': return { emoji: '\u2691', color: 'error' };
-      case 'recommendation': return { emoji: '\u2728', color: 'info' };
-      case 'trend': return { emoji: '\u2191', color: 'success' };
+      case 'alert': return { emoji: '⚠', color: 'warning' };
+      case 'anomaly': return { emoji: '⚑', color: 'error' };
+      case 'recommendation': return { emoji: '✨', color: 'info' };
+      case 'trend': return { emoji: '↑', color: 'success' };
     }
   };
 
@@ -71,7 +71,7 @@ export default function BrandAdminDashboard() {
       <header className="ba-header">
         <div>
           <h1 className="page-title">Dashboard</h1>
-          <p className="text-secondary">What\u2019s happening across Xiaomi India \u2014 March 2026</p>
+          <p className="text-secondary">What’s happening across Xiaomi India — March 2026</p>
         </div>
         <div className="ba-header-actions">
           <button className="btn-secondary" onClick={() => navigate('/invoices')}>Download MIS</button>
@@ -142,7 +142,7 @@ export default function BrandAdminDashboard() {
           <div className="ba-ai-tile-icon">&#10022;</div>
           <div>
             <div className="ba-ai-tile-title">First-time setup wizard</div>
-            <div className="ba-ai-tile-sub">6-step guided flow to onboard your entire team \u2014 ~10 minutes</div>
+            <div className="ba-ai-tile-sub">6-step guided flow to onboard your entire team — ~10 minutes</div>
           </div>
           <AIBadge label="AI" />
         </button>
@@ -150,7 +150,7 @@ export default function BrandAdminDashboard() {
           <div className="ba-ai-tile-icon">&#128228;</div>
           <div>
             <div className="ba-ai-tile-title">Bulk onboard users</div>
-            <div className="ba-ai-tile-sub">AI normalises any partner file format \u2014 3 hours \u2192 3 minutes</div>
+            <div className="ba-ai-tile-sub">AI normalises any partner file format — 3 hours → 3 minutes</div>
           </div>
           <AIBadge label="AI" />
         </button>
@@ -175,7 +175,7 @@ export default function BrandAdminDashboard() {
       <div className="ba-split">
         {/* Trend chart */}
         <div className="card ba-chart-card">
-          <div className="ba-card-title">GWP & policies \u2014 last 6 months</div>
+          <div className="ba-card-title">GWP & policies — last 6 months</div>
           <svg viewBox="0 0 600 220" className="ba-chart-svg">
             <defs>
               <linearGradient id="ba-area" x1="0" y1="0" x2="0" y2="1">
@@ -249,7 +249,7 @@ export default function BrandAdminDashboard() {
           </div>
           <div className="ba-approval-row">
             <span className="badge badge-info">Withdrawal</span>
-            <span>\u20B968,400 withdrawal request from Croma Koramangala</span>
+            <span>₹68,400 withdrawal request from Croma Koramangala</span>
             <button className="btn-ghost">Review &rarr;</button>
           </div>
           <div className="ba-approval-row">

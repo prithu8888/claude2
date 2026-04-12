@@ -8,7 +8,7 @@ const metricCards = [
   { icon: '\u{1F4CA}', label: 'Total Sales', value: dealerMetrics.totalSales.toLocaleString('en-IN') },
   { icon: '\u{1F4C5}', label: 'This Month', value: dealerMetrics.monthSales.toLocaleString('en-IN') },
   { icon: '\u{1F465}', label: 'Active Promoters', value: dealerMetrics.activePromoters.toLocaleString('en-IN') },
-  { icon: '\u{1F4B0}', label: 'Commission Earned', value: `\u20B9${dealerMetrics.totalCommission.toLocaleString('en-IN')}` },
+  { icon: '\u{1F4B0}', label: 'Commission Earned', value: `₹${dealerMetrics.totalCommission.toLocaleString('en-IN')}` },
 ];
 
 function getGreeting(): string {
@@ -97,7 +97,7 @@ export default function DealerDashboard() {
                   <span className="list-item-date">{formatDate(sale.date)}</span>
                 </div>
                 <div className="list-item-meta">
-                  <span className="list-item-commission">{`\u20B9${sale.commission.toLocaleString('en-IN')}`}</span>
+                  <span className="list-item-commission">{`₹${sale.commission.toLocaleString('en-IN')}`}</span>
                   <span className={`badge ${getStatusClass(sale.status)}`}>{sale.status}</span>
                 </div>
               </div>
@@ -164,7 +164,7 @@ export default function DealerDashboard() {
                 </div>
                 <p className="claim-description">{claim.description}</p>
                 <div className="claim-card-footer">
-                  <span className="claim-amount">{claim.amount ? `\u20B9${claim.amount.toLocaleString('en-IN')}` : '--'}</span>
+                  <span className="claim-amount">{claim.amount ? `₹${claim.amount.toLocaleString('en-IN')}` : '--'}</span>
                   <span className="claim-date">{formatDate(claim.date)}</span>
                 </div>
               </div>

@@ -16,7 +16,7 @@ interface IncidentForm {
 }
 
 function formatCurrency(amount: number): string {
-  return '\u20B9' + amount.toLocaleString('en-IN');
+  return '₹' + amount.toLocaleString('en-IN');
 }
 
 function formatDate(dateStr: string): string {
@@ -263,7 +263,7 @@ export default function ClaimsFNOL() {
           </div>
 
           <div className="claims-form-group">
-            <label className="claims-label">Estimated Claim Amount ({'\u20B9'})</label>
+            <label className="claims-label">Estimated Claim Amount ({'₹'})</label>
             <input
               type="number"
               className="input-field"

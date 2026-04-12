@@ -115,7 +115,7 @@ export default function SuperAdminPolicies() {
                 <td>{p.product}</td>
                 <td>{p.plan}</td>
                 <td>{p.customer}</td>
-                <td>{'\u20B9'}{p.premium.toLocaleString()}</td>
+                <td>{'₹'}{p.premium.toLocaleString()}</td>
                 <td>{p.date}</td>
                 <td>
                   <span className={`badge ${statusBadge[p.status]}`}>

@@ -43,10 +43,10 @@ export default function CommissionDisputeTracer({
         difference: Math.abs(diff),
         explanation:
           verdict === 'correct'
-            ? `Commission of \u20B9${commissionAmount} matches the expected 20% rate for ${productName}.`
+            ? `Commission of ₹${commissionAmount} matches the expected 20% rate for ${productName}.`
             : verdict === 'underpaid'
-            ? `Commission shortfall of \u20B9${Math.abs(diff)} detected. Expected \u20B9${expectedAmount} based on 20% Tier 1 rate.`
-            : `Overpayment of \u20B9${Math.abs(diff)} detected. Expected \u20B9${expectedAmount} based on 20% Tier 1 rate.`,
+            ? `Commission shortfall of ₹${Math.abs(diff)} detected. Expected ₹${expectedAmount} based on 20% Tier 1 rate.`
+            : `Overpayment of ₹${Math.abs(diff)} detected. Expected ₹${expectedAmount} based on 20% Tier 1 rate.`,
       });
       setTracing(false);
     }, 2000);
@@ -86,8 +86,8 @@ export default function CommissionDisputeTracer({
               {result.verdict === 'correct'
                 ? 'Commission Correct'
                 : result.verdict === 'underpaid'
-                ? `Underpaid by \u20B9${result.difference}`
-                : `Overpaid by \u20B9${result.difference}`}
+                ? `Underpaid by ₹${result.difference}`
+                : `Overpaid by ₹${result.difference}`}
             </span>
           </div>
 

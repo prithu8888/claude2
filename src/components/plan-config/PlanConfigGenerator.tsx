@@ -153,7 +153,7 @@ function mockGenerate(brief: DealBrief): ConfigOutput {
       value: null,
       source: 'NEEDS_INPUT',
       confidence: 'NEEDS_REVIEW',
-      note: 'Partner\u2019s escalation contact \u2014 confirm with BD.',
+      note: 'Partner’s escalation contact — confirm with BD.',
     },
   };
 }
@@ -203,7 +203,7 @@ export default function PlanConfigGenerator() {
         <div>
           <h1 className="page-title">Partner Plan Config Generator</h1>
           <p className="text-secondary">
-            Enter a deal brief \u2014 AI pre-fills the Plan Details config using the closest existing partner as reference.
+            Enter a deal brief — AI pre-fills the Plan Details config using the closest existing partner as reference.
           </p>
         </div>
         <button className="btn-ghost" onClick={() => setShowPrompt(!showPrompt)}>
@@ -214,7 +214,7 @@ export default function PlanConfigGenerator() {
       {showPrompt && (
         <div className="pcg-prompt-view card">
           <div className="pcg-prompt-header">
-            <AIBadge label="System prompt \u2014 Plan Config" />
+            <AIBadge label="System prompt — Plan Config" />
             <span className="text-tertiary">Sent to Claude as the system message</span>
           </div>
           <pre className="pcg-prompt-text">{planConfigPrompt(brief, referenceConfig)}</pre>
@@ -270,7 +270,7 @@ export default function PlanConfigGenerator() {
               </select>
             </div>
             <div className="pcg-field">
-              <label>Device price min (\u20B9)</label>
+              <label>Device price min (₹)</label>
               <input
                 className="input-field"
                 type="number"
@@ -279,7 +279,7 @@ export default function PlanConfigGenerator() {
               />
             </div>
             <div className="pcg-field">
-              <label>Device price max (\u20B9)</label>
+              <label>Device price max (₹)</label>
               <input
                 className="input-field"
                 type="number"
@@ -353,7 +353,7 @@ export default function PlanConfigGenerator() {
 
           <div className="pcg-actions">
             <button className="btn-primary" onClick={handleGenerate} disabled={generating}>
-              {generating ? 'Generating\u2026' : 'Generate plan config'}
+              {generating ? 'Generating…' : 'Generate plan config'}
             </button>
           </div>
         </div>
@@ -376,7 +376,7 @@ export default function PlanConfigGenerator() {
               <div className="kyc-spinner" />
               <div>
                 <strong>Calling AI config generator</strong>
-                <div className="text-secondary">Comparing deal brief against reference config\u2026</div>
+                <div className="text-secondary">Comparing deal brief against reference config…</div>
               </div>
             </div>
           )}
@@ -397,7 +397,7 @@ export default function PlanConfigGenerator() {
                     </div>
                     <div className="pcg-field-value">
                       {field.value === null ? (
-                        <span className="text-tertiary">\u2014 empty \u2014</span>
+                        <span className="text-tertiary">— empty —</span>
                       ) : typeof field.value === 'object' ? (
                         <code className="pcg-code">{JSON.stringify(field.value)}</code>
                       ) : (

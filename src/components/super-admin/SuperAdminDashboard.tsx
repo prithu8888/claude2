@@ -14,17 +14,17 @@ const platformMetrics = [
   { label: 'Total Brands', value: '6', sub: 'Across 4 verticals' },
   { label: 'Total Dealers', value: '890', sub: '+23 this month' },
   { label: 'Total Policies', value: '78,234', sub: '+4,312 this month' },
-  { label: 'GWP', value: '\u20B932.5Cr', sub: 'FY 2025-26' },
+  { label: 'GWP', value: '₹32.5Cr', sub: 'FY 2025-26' },
   { label: 'Claims Ratio', value: '11.2%', sub: 'Within target' },
 ];
 
 const brandPerformance: BrandPerformance[] = [
-  { brand: 'Samsung', vertical: 'Electronics Retail', dealers: 234, policies: 24512, gwp: '\u20B910.2Cr', claimsRatio: 9.8 },
-  { brand: 'Xiaomi', vertical: 'Electronics Retail', dealers: 189, policies: 18234, gwp: '\u20B97.1Cr', claimsRatio: 10.5 },
-  { brand: 'Ather', vertical: 'EV 2-Wheeler', dealers: 145, policies: 12890, gwp: '\u20B96.8Cr', claimsRatio: 12.1 },
-  { brand: 'Ola', vertical: 'EV 2-Wheeler', dealers: 132, policies: 10234, gwp: '\u20B94.5Cr', claimsRatio: 13.4 },
-  { brand: 'Bajaj', vertical: 'EV 2-Wheeler', dealers: 112, policies: 8123, gwp: '\u20B92.8Cr', claimsRatio: 11.0 },
-  { brand: 'TVS', vertical: 'EV 2-Wheeler', dealers: 78, policies: 4241, gwp: '\u20B91.1Cr', claimsRatio: 10.2 },
+  { brand: 'Samsung', vertical: 'Electronics Retail', dealers: 234, policies: 24512, gwp: '₹10.2Cr', claimsRatio: 9.8 },
+  { brand: 'Xiaomi', vertical: 'Electronics Retail', dealers: 189, policies: 18234, gwp: '₹7.1Cr', claimsRatio: 10.5 },
+  { brand: 'Ather', vertical: 'EV 2-Wheeler', dealers: 145, policies: 12890, gwp: '₹6.8Cr', claimsRatio: 12.1 },
+  { brand: 'Ola', vertical: 'EV 2-Wheeler', dealers: 132, policies: 10234, gwp: '₹4.5Cr', claimsRatio: 13.4 },
+  { brand: 'Bajaj', vertical: 'EV 2-Wheeler', dealers: 112, policies: 8123, gwp: '₹2.8Cr', claimsRatio: 11.0 },
+  { brand: 'TVS', vertical: 'EV 2-Wheeler', dealers: 78, policies: 4241, gwp: '₹1.1Cr', claimsRatio: 10.2 },
 ];
 
 const recentActivity = [

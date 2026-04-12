@@ -18,13 +18,13 @@ interface WaMessage {
 
 const messages: WaMessage[] = [
   { id: 'w1', to: 'Priya Patel', phone: '+91 98765XXXXX', template: 'Policy Issued', category: 'customer', status: 'read', sentAt: '2026-03-07 10:42', preview: 'Your ACKO device protection policy ACK-2026-1432 has been activated. View policy: bit.ly/xyz' },
-  { id: 'w2', to: 'Amit Sharma', phone: '+91 98764XXXXX', template: 'Daily Summary', category: 'agent', status: 'delivered', sentAt: '2026-03-07 08:00', preview: 'Hi Amit, you sold 5 plans yesterday and earned \u20B9245. Keep it up!' },
-  { id: 'w3', to: 'Croma Koramangala', phone: '+91 98763XXXXX', template: 'Weekly Report', category: 'dealer', status: 'read', sentAt: '2026-03-07 09:15', preview: 'Your weekly performance report: 47 policies sold, \u20B92,340 in commissions.' },
-  { id: 'w4', to: 'Rahul Kumar', phone: '+91 98762XXXXX', template: 'Claim Status', category: 'customer', status: 'read', sentAt: '2026-03-06 16:30', preview: 'Your claim CLM-884 has been approved. \u20B98,500 will be credited within 3 business days.' },
-  { id: 'w5', to: 'Sneha Reddy', phone: '+91 98761XXXXX', template: 'Incentive Credited', category: 'agent', status: 'delivered', sentAt: '2026-03-06 12:00', preview: 'Incentive of \u20B91,200 has been credited to your wallet. Withdraw anytime.' },
+  { id: 'w2', to: 'Amit Sharma', phone: '+91 98764XXXXX', template: 'Daily Summary', category: 'agent', status: 'delivered', sentAt: '2026-03-07 08:00', preview: 'Hi Amit, you sold 5 plans yesterday and earned ₹245. Keep it up!' },
+  { id: 'w3', to: 'Croma Koramangala', phone: '+91 98763XXXXX', template: 'Weekly Report', category: 'dealer', status: 'read', sentAt: '2026-03-07 09:15', preview: 'Your weekly performance report: 47 policies sold, ₹2,340 in commissions.' },
+  { id: 'w4', to: 'Rahul Kumar', phone: '+91 98762XXXXX', template: 'Claim Status', category: 'customer', status: 'read', sentAt: '2026-03-06 16:30', preview: 'Your claim CLM-884 has been approved. ₹8,500 will be credited within 3 business days.' },
+  { id: 'w5', to: 'Sneha Reddy', phone: '+91 98761XXXXX', template: 'Incentive Credited', category: 'agent', status: 'delivered', sentAt: '2026-03-06 12:00', preview: 'Incentive of ₹1,200 has been credited to your wallet. Withdraw anytime.' },
   { id: 'w6', to: 'Vikram Singh', phone: '+91 98760XXXXX', template: 'Renewal Reminder', category: 'customer', status: 'sent', sentAt: '2026-03-06 10:45', preview: 'Hi Vikram, your Samsung S24 protection plan expires in 15 days. Renew to stay protected.' },
   { id: 'w7', to: 'EV World Bengaluru', phone: '+91 98759XXXXX', template: 'New Campaign', category: 'dealer', status: 'delivered', sentAt: '2026-03-05 14:22', preview: 'A new campaign "Monsoon Shield" is now live. 12% off all device protection plans.' },
-  { id: 'w8', to: 'Kiran Rao', phone: '+91 98758XXXXX', template: 'Payment Link', category: 'customer', status: 'failed', sentAt: '2026-03-05 11:12', preview: 'Pay \u20B9444 to complete your device protection purchase.' },
+  { id: 'w8', to: 'Kiran Rao', phone: '+91 98758XXXXX', template: 'Payment Link', category: 'customer', status: 'failed', sentAt: '2026-03-05 11:12', preview: 'Pay ₹444 to complete your device protection purchase.' },
 ];
 
 const templates = [

@@ -115,7 +115,7 @@ export default function BulkOnboarding() {
         <div>
           <h1 className="page-title">Bulk User Onboarding</h1>
           <p className="text-secondary">
-            Upload any partner file format \u2014 our AI normalises the columns automatically.
+            Upload any partner file format — our AI normalises the columns automatically.
           </p>
         </div>
         <button className="btn-ghost" onClick={() => setShowPrompt(!showPrompt)}>
@@ -126,7 +126,7 @@ export default function BulkOnboarding() {
       {showPrompt && (
         <div className="bulk-prompt-view card">
           <div className="bulk-prompt-header">
-            <AIBadge label="System prompt \u2014 Format Normaliser" />
+            <AIBadge label="System prompt — Format Normaliser" />
             <span className="text-tertiary">Sent to Claude as the system message</span>
           </div>
           <pre className="bulk-prompt-text">{formatNormalizerPrompt(VALID_GROUPS)}</pre>
@@ -140,7 +140,7 @@ export default function BulkOnboarding() {
           const status = i < stepIndex ? 'complete' : i === stepIndex ? 'active' : 'pending';
           return (
             <div key={s} className={`bulk-step bulk-step-${status}`}>
-              <div className="bulk-step-num">{status === 'complete' ? '\u2713' : i + 1}</div>
+              <div className="bulk-step-num">{status === 'complete' ? '✓' : i + 1}</div>
               <span>{s.charAt(0).toUpperCase() + s.slice(1)}</span>
             </div>
           );
@@ -160,7 +160,7 @@ export default function BulkOnboarding() {
           <div className="bulk-upload-icon">&#128228;</div>
           <div className="bulk-upload-title">Drop your partner file here</div>
           <div className="bulk-upload-sub">
-            CSV, XLS, or XLSX. Any column layout works \u2014 our AI handles the mapping.
+            CSV, XLS, or XLSX. Any column layout works — our AI handles the mapping.
           </div>
           <button className="btn-primary" onClick={(e) => { e.stopPropagation(); handleFileSelect(null); }}>
             Choose file
@@ -187,13 +187,13 @@ export default function BulkOnboarding() {
           {mappingLoading ? (
             <div className="bulk-loading">
               <div className="kyc-spinner" />
-              <span>Reading columns and matching to MPOS schema\u2026</span>
+              <span>Reading columns and matching to MPOS schema…</span>
             </div>
           ) : mapping ? (
             <>
               <div className="bulk-mapping-legend">
                 <span className="conf-chip conf-high">HIGH (&gt;90%)</span>
-                <span className="conf-chip conf-medium">MEDIUM (60\u201390%)</span>
+                <span className="conf-chip conf-medium">MEDIUM (60–90%)</span>
                 <span className="conf-chip conf-low">LOW (&lt;60%)</span>
               </div>
 
@@ -213,7 +213,7 @@ export default function BulkOnboarding() {
                       {m.target_field ? (
                         <code>{m.target_field}</code>
                       ) : (
-                        <span className="text-tertiary">\u2014 unmapped \u2014</span>
+                        <span className="text-tertiary">— unmapped —</span>
                       )}
                     </div>
                     <div>
@@ -281,7 +281,7 @@ export default function BulkOnboarding() {
                   {r.error ? (
                     <span className="badge badge-error">Error</span>
                   ) : (
-                    <span className="badge badge-success">\u2713 Ready</span>
+                    <span className="badge badge-success">✓ Ready</span>
                   )}
                 </div>
                 {r.error && r.translation && (
@@ -293,7 +293,7 @@ export default function BulkOnboarding() {
                       <AIBadge label="AI translation" />
                       <div>
                         <strong>{r.translation.plain_english}</strong>
-                        <div className="text-secondary">\u279C {r.translation.action}</div>
+                        <div className="text-secondary">➜ {r.translation.action}</div>
                         {r.translation.escalate_to_saroj && (
                           <div className="bulk-escalate">
                             &#9888; Escalate to engineering: {r.translation.escalation_reason}
@@ -322,7 +322,7 @@ export default function BulkOnboarding() {
       {step === 'import' && (
         <div className="card bulk-done-card">
           <div className="kyc-spinner" />
-          <h3>Importing {cleanRows.length} rows\u2026</h3>
+          <h3>Importing {cleanRows.length} rows…</h3>
           <p className="text-secondary">Provisioning accounts and sending OTP invites</p>
         </div>
       )}

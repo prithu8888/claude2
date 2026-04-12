@@ -25,10 +25,10 @@ interface GSTRecon {
 }
 
 const revenueCards = [
-  { label: 'Total Revenue', value: '\u20B932.5Cr', sub: 'FY 2025-26', accent: 'purple' },
-  { label: 'Commission Paid', value: '\u20B94.8Cr', sub: '14.8% of GWP', accent: 'green' },
-  { label: 'Pending Settlements', value: '\u20B91.2Cr', sub: '18 batches', accent: 'orange' },
-  { label: 'GST Collected', value: '\u20B95.85Cr', sub: '18% of GWP', accent: 'blue' },
+  { label: 'Total Revenue', value: '₹32.5Cr', sub: 'FY 2025-26', accent: 'purple' },
+  { label: 'Commission Paid', value: '₹4.8Cr', sub: '14.8% of GWP', accent: 'green' },
+  { label: 'Pending Settlements', value: '₹1.2Cr', sub: '18 batches', accent: 'orange' },
+  { label: 'GST Collected', value: '₹5.85Cr', sub: '18% of GWP', accent: 'blue' },
 ];
 
 const settlements: Settlement[] = [
@@ -62,9 +62,9 @@ const reconBadge: Record<string, string> = {
 };
 
 function formatCurrency(n: number): string {
-  if (n >= 10000000) return '\u20B9' + (n / 10000000).toFixed(2) + 'Cr';
-  if (n >= 100000) return '\u20B9' + (n / 100000).toFixed(2) + 'L';
-  return '\u20B9' + n.toLocaleString();
+  if (n >= 10000000) return '₹' + (n / 10000000).toFixed(2) + 'Cr';
+  if (n >= 100000) return '₹' + (n / 100000).toFixed(2) + 'L';
+  return '₹' + n.toLocaleString();
 }
 
 export default function SuperAdminFinance() {

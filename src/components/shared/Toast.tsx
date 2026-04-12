@@ -28,7 +28,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
         {toasts.map((t) => (
           <div key={t.id} className={`toast toast-${t.kind}`}>
             <span className="toast-icon">
-              {t.kind === 'success' ? '\u2713' : t.kind === 'error' ? '\u2715' : '\u2139'}
+              {t.kind === 'success' ? '✓' : t.kind === 'error' ? '✕' : 'ℹ'}
             </span>
             <span className="toast-message">{t.message}</span>
           </div>

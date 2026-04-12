@@ -25,8 +25,8 @@ interface MappingRow {
 }
 
 const INITIAL_MAPPING: MappingRow[] = [
-  { id: 'r1', column: 'Xiaomi FSM Mobile number', sample: '9840513986', mapsTo: 'parent_phone', confidence: 'CHECK', tooltip: "This looks like a parent\u2019s phone number but we\u2019re not 100% certain. Please confirm." },
-  { id: 'r2', column: 'ASC', sample: 'PSC', mapsTo: 'group \u2192 xiaomi_psc', confidence: 'CHECK', tooltip: 'Inferred group type from column value. Please confirm this maps correctly.' },
+  { id: 'r1', column: 'Xiaomi FSM Mobile number', sample: '9840513986', mapsTo: 'parent_phone', confidence: 'CHECK', tooltip: "This looks like a parent’s phone number but we’re not 100% certain. Please confirm." },
+  { id: 'r2', column: 'ASC', sample: 'PSC', mapsTo: 'group → xiaomi_psc', confidence: 'CHECK', tooltip: 'Inferred group type from column value. Please confirm this maps correctly.' },
   { id: 'r3', column: 'ASC/Center Manager name', sample: 'Paul Singarayar', mapsTo: 'name', confidence: 'MATCHED' },
   { id: 'r4', column: 'Xiaomi- PSC ID', sample: 'XMIN4413', mapsTo: 'partner_id', confidence: 'MATCHED' },
   { id: 'r5', column: 'PSC Mobile Number', sample: '9489391717', mapsTo: 'phone', confidence: 'MATCHED' },
@@ -38,7 +38,7 @@ const INITIAL_MAPPING: MappingRow[] = [
   { id: 'r11', column: 'Xiaomi FSM Name', sample: 'Mr. Boopathi', mapsTo: null, confidence: 'SKIPPED' },
 ];
 
-const MPOS_FIELDS = ['name', 'phone', 'partner_id', 'parent_phone', 'address', 'pincode', 'email', 'group \u2192 xiaomi_psc', 'ignore this column'];
+const MPOS_FIELDS = ['name', 'phone', 'partner_id', 'parent_phone', 'address', 'pincode', 'email', 'group → xiaomi_psc', 'ignore this column'];
 
 interface ErrorRow {
   id: string;
@@ -61,14 +61,14 @@ const INITIAL_ERRORS: ErrorRow[] = [
     rowNumber: 17,
     name: 'Rajan Muthusamy',
     phone: '9789012345',
-    message: 'Parent phone 9876543210 not found in this file. Make sure the parent\u2019s row is also in your file, or check the number.',
+    message: 'Parent phone 9876543210 not found in this file. Make sure the parent’s row is also in your file, or check the number.',
   },
   {
     id: 'e3',
     rowNumber: 31,
     name: '',
     phone: '9812345678',
-    message: 'Name is required. This row is missing the dealer\u2019s name.',
+    message: 'Name is required. This row is missing the dealer’s name.',
   },
 ];
 
@@ -127,7 +127,7 @@ function Step1Welcome({ onNext }: { onNext: () => void }) {
   return (
     <div className="wiz-step-content">
       <h1 className="wiz-h1">Welcome to MPOS, Oppo India</h1>
-      <p className="wiz-sub">Let\u2019s get your team set up. This should take about 10 minutes.</p>
+      <p className="wiz-sub">Let’s get your team set up. This should take about 10 minutes.</p>
 
       <div className="wiz-info-cards">
         <div className="wiz-info-card">
@@ -155,7 +155,7 @@ function Step1Welcome({ onNext }: { onNext: () => void }) {
           </div>
           <div className="wiz-info-title">Relationships matter</div>
           <div className="wiz-info-body">
-            Each promoter reports to a sub-dealer, each sub-dealer reports to a dealer. We\u2019ll help you set this up correctly.
+            Each promoter reports to a sub-dealer, each sub-dealer reports to a dealer. We’ll help you set this up correctly.
           </div>
         </div>
         <div className="wiz-info-card">
@@ -168,7 +168,7 @@ function Step1Welcome({ onNext }: { onNext: () => void }) {
           </div>
           <div className="wiz-info-title">Upload any file format</div>
           <div className="wiz-info-body">
-            Send us your existing spreadsheet \u2014 any format, any column names. Our AI will do the mapping.
+            Send us your existing spreadsheet — any format, any column names. Our AI will do the mapping.
           </div>
         </div>
       </div>
@@ -180,7 +180,7 @@ function Step1Welcome({ onNext }: { onNext: () => void }) {
 
       <div className="wiz-footer-solo">
         <button className="wiz-btn-primary wiz-btn-wide" onClick={onNext}>
-          Let\u2019s get started &rarr;
+          Let’s get started &rarr;
         </button>
       </div>
     </div>
@@ -189,7 +189,7 @@ function Step1Welcome({ onNext }: { onNext: () => void }) {
 
 // ----- Step 2: Upload -----
 
-const LOADING_MESSAGES = ['Reading your file\u2026', 'Identifying columns\u2026', 'Mapping to MPOS schema\u2026'];
+const LOADING_MESSAGES = ['Reading your file…', 'Identifying columns…', 'Mapping to MPOS schema…'];
 
 function Step2Upload({ onBack, onNext }: { onBack: () => void; onNext: () => void }) {
   const [uploaded, setUploaded] = useState(false);
@@ -224,7 +224,7 @@ function Step2Upload({ onBack, onNext }: { onBack: () => void; onNext: () => voi
   return (
     <div className="wiz-step-content">
       <h1 className="wiz-h1">Upload your team file</h1>
-      <p className="wiz-sub">Any Excel or CSV file works. We\u2019ll handle the formatting.</p>
+      <p className="wiz-sub">Any Excel or CSV file works. We’ll handle the formatting.</p>
 
       {!uploaded ? (
         <>
@@ -238,9 +238,9 @@ function Step2Upload({ onBack, onNext }: { onBack: () => void; onNext: () => voi
               </svg>
             </div>
             <div className="wiz-dropzone-title">Drag your file here, or click to browse</div>
-            <div className="wiz-dropzone-sub">Supports .xlsx, .xls, .csv \u2014 any format</div>
+            <div className="wiz-dropzone-sub">Supports .xlsx, .xls, .csv — any format</div>
           </label>
-          <button className="wiz-link-grey" type="button">Don\u2019t have a file? Download our template instead</button>
+          <button className="wiz-link-grey" type="button">Don’t have a file? Download our template instead</button>
           <button className="wiz-simulate-btn" onClick={() => setUploaded(true)}>
             Simulate: Upload Xiaomi file
           </button>
@@ -303,7 +303,7 @@ function Step3Mapping({ onBack, onNext }: { onBack: () => void; onNext: () => vo
     <div className="wiz-step-content wiz-step-wide">
       <h1 className="wiz-h1">Review AI column mapping</h1>
       <p className="wiz-sub">
-        We\u2019ve mapped your columns to MPOS fields. Check the amber rows \u2014 everything else looks good.
+        We’ve mapped your columns to MPOS fields. Check the amber rows — everything else looks good.
       </p>
 
       <div className="wiz-summary-pills">
@@ -341,7 +341,7 @@ function Step3Mapping({ onBack, onNext }: { onBack: () => void; onNext: () => vo
                       ))}
                     </select>
                   ) : (
-                    <span className="wiz-not-mapped">\u2014 not mapped</span>
+                    <span className="wiz-not-mapped">— not mapped</span>
                   )}
                 </td>
                 <td>
@@ -379,7 +379,7 @@ function Step3Mapping({ onBack, onNext }: { onBack: () => void; onNext: () => vo
       </div>
 
       <div className="wiz-info-note">
-        Skipped columns will not be imported. This is fine \u2014 MPOS only needs the mapped fields.
+        Skipped columns will not be imported. This is fine — MPOS only needs the mapped fields.
       </div>
 
       <div className="wiz-footer">
@@ -429,7 +429,7 @@ function Step4Errors({ onBack, onNext }: { onBack: () => void; onNext: () => voi
 
   return (
     <div className="wiz-step-content">
-      <h1 className="wiz-h1">Almost there \u2014 fix these errors</h1>
+      <h1 className="wiz-h1">Almost there — fix these errors</h1>
       <p className="wiz-sub">
         {readyCount} rows are ready. {unresolvedCount > 0 ? `${unresolvedCount} rows need attention before we can create the accounts.` : 'All errors resolved.'}
       </p>
@@ -511,7 +511,7 @@ function Step4Errors({ onBack, onNext }: { onBack: () => void; onNext: () => voi
         <button className="wiz-btn-ghost" onClick={onBack}>&larr; Back</button>
         <div className="wiz-footer-right">
           <button className="wiz-link-grey" title="Skipped rows will not be created. You can re-upload them anytime.">
-            Skip for now \u2014 I\u2019ll fix these later
+            Skip for now — I’ll fix these later
           </button>
           <button className="wiz-btn-primary" disabled={!allResolved} onClick={onNext}>
             Preview hierarchy &rarr;
@@ -553,7 +553,7 @@ function Step5Preview({ onBack, onNext }: { onBack: () => void; onNext: () => vo
     <div className="wiz-step-content wiz-step-wide">
       <h1 className="wiz-h1">Review your hierarchy</h1>
       <p className="wiz-sub">
-        This is what we\u2019re about to create. Check that everything looks right before we commit.
+        This is what we’re about to create. Check that everything looks right before we commit.
       </p>
 
       <div className="wiz-stats-row">

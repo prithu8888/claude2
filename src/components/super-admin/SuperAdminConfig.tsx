@@ -37,12 +37,12 @@ const verticals: VerticalConfig[] = [
 ];
 
 const planTemplates: PlanTemplate[] = [
-  { id: 't1', name: 'Extended Warranty - Standard', vertical: 'Electronics Retail', type: 'EW', basePremiumRange: '\u20B91,500 - \u20B94,000', tenure: '1-2 Years', active: true },
-  { id: 't2', name: 'Accidental & Liquid Damage', vertical: 'Electronics Retail', type: 'ALD', basePremiumRange: '\u20B92,000 - \u20B93,500', tenure: '1 Year', active: true },
-  { id: 't3', name: 'EV Comprehensive - 2W', vertical: 'EV 2-Wheeler', type: 'Comprehensive', basePremiumRange: '\u20B94,000 - \u20B97,000', tenure: '1 Year', active: true },
-  { id: 't4', name: 'EV Third Party - 2W', vertical: 'EV 2-Wheeler', type: 'Third Party', basePremiumRange: '\u20B91,500 - \u20B92,500', tenure: '1 Year', active: true },
-  { id: 't5', name: 'Personal Accident Cover', vertical: 'EV 2-Wheeler', type: 'PA', basePremiumRange: '\u20B9800 - \u20B91,200', tenure: '1 Year', active: true },
-  { id: 't6', name: 'EV Comprehensive - 4W', vertical: 'EV 4-Wheeler', type: 'Comprehensive', basePremiumRange: '\u20B920,000 - \u20B935,000', tenure: '1 Year', active: false },
+  { id: 't1', name: 'Extended Warranty - Standard', vertical: 'Electronics Retail', type: 'EW', basePremiumRange: '₹1,500 - ₹4,000', tenure: '1-2 Years', active: true },
+  { id: 't2', name: 'Accidental & Liquid Damage', vertical: 'Electronics Retail', type: 'ALD', basePremiumRange: '₹2,000 - ₹3,500', tenure: '1 Year', active: true },
+  { id: 't3', name: 'EV Comprehensive - 2W', vertical: 'EV 2-Wheeler', type: 'Comprehensive', basePremiumRange: '₹4,000 - ₹7,000', tenure: '1 Year', active: true },
+  { id: 't4', name: 'EV Third Party - 2W', vertical: 'EV 2-Wheeler', type: 'Third Party', basePremiumRange: '₹1,500 - ₹2,500', tenure: '1 Year', active: true },
+  { id: 't5', name: 'Personal Accident Cover', vertical: 'EV 2-Wheeler', type: 'PA', basePremiumRange: '₹800 - ₹1,200', tenure: '1 Year', active: true },
+  { id: 't6', name: 'EV Comprehensive - 4W', vertical: 'EV 4-Wheeler', type: 'Comprehensive', basePremiumRange: '₹20,000 - ₹35,000', tenure: '1 Year', active: false },
 ];
 
 const commissionDefaults: CommissionDefault[] = [
@@ -211,8 +211,8 @@ export default function SuperAdminConfig() {
                     <td>
                       <span className="badge badge-purple">{c.percentage}%</span>
                     </td>
-                    <td>{'\u20B9'}{c.minAmount.toLocaleString()}</td>
-                    <td>{'\u20B9'}{c.maxAmount.toLocaleString()}</td>
+                    <td>{'₹'}{c.minAmount.toLocaleString()}</td>
+                    <td>{'₹'}{c.maxAmount.toLocaleString()}</td>
                     <td>
                       <div className="sa-actions">
                         <button className="sa-btn-icon" title="Edit">&#x270F;</button>

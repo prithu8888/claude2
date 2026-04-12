@@ -36,7 +36,7 @@ const initialCampaigns: Campaign[] = [
     id: 'c2',
     name: 'Weekend Warrior',
     brand: 'Ather Energy',
-    discount: '\u20B9500 off',
+    discount: '₹500 off',
     status: 'active',
     startDate: '2026-03-15',
     endDate: '2026-03-31',
@@ -153,7 +153,7 @@ export default function Campaigns() {
                   onChange={(e) => setForm({ ...form, discountType: e.target.value as 'percentage' | 'flat' })}
                 >
                   <option value="percentage">Percentage (%)</option>
-                  <option value="flat">Flat (\u20B9)</option>
+                  <option value="flat">Flat (₹)</option>
                 </select>
               </div>
               <div className="campaign-field">
@@ -170,7 +170,7 @@ export default function Campaigns() {
             {form.discountValue && (
               <div className="campaign-preview-inline">
                 <span className="text-secondary">Preview:</span>
-                <span className="line-through text-tertiary">\u20B9444</span>
+                <span className="line-through text-tertiary">₹444</span>
                 <strong>
                   {form.discountType === 'percentage'
                     ? formatINR(Math.round(444 * (1 - parseInt(form.discountValue, 10) / 100)))
@@ -238,7 +238,7 @@ export default function Campaigns() {
             </div>
 
             <div className="campaign-field">
-              <label>Budget cap (\u20B9)</label>
+              <label>Budget cap (₹)</label>
               <input
                 className="input-field"
                 placeholder="500000"
@@ -284,7 +284,7 @@ export default function Campaigns() {
               </div>
               <div className="campaign-insight">
                 <strong>State recommendation</strong>
-                <p>Your Karnataka attach rate is 4pp below national average \u2014 a state-specific push here may have highest ROI.</p>
+                <p>Your Karnataka attach rate is 4pp below national average — a state-specific push here may have highest ROI.</p>
               </div>
             </div>
           </div>

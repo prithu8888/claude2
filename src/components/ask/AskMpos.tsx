@@ -15,7 +15,7 @@ interface ChatMessage {
 const sampleQueries = [
   'Show me sales by state this month',
   "Which agents haven't sold anything in 7 days?",
-  'What\u2019s the attach rate for Xiaomi Redmi Note 13 Pro?',
+  'What’s the attach rate for Xiaomi Redmi Note 13 Pro?',
   'Create a campaign for Karnataka dealers this weekend',
   'Why is my loss ratio going up?',
 ];
@@ -30,7 +30,7 @@ function generateResponse(query: string): ChatMessage {
       id,
       role: 'assistant',
       kind: 'table',
-      content: 'Here\u2019s your sales by state for March 2026:',
+      content: 'Here’s your sales by state for March 2026:',
       table: {
         headers: ['State', 'Policies', 'GWP', 'MoM'],
         rows: [
@@ -70,7 +70,7 @@ function generateResponse(query: string): ChatMessage {
       role: 'assistant',
       kind: 'narrative',
       content:
-        'The attach rate for Xiaomi Redmi Note 13 Pro is 8.2% this month \u2014 up from 7.1% in February. This is 0.4pp above your brand average. Karnataka and Tamil Nadu are driving the uplift, while Delhi NCR is lagging at 5.8%. Recommendation: the new "Monsoon Shield" campaign is resonating with mid-range device buyers; consider extending it to Delhi.',
+        'The attach rate for Xiaomi Redmi Note 13 Pro is 8.2% this month — up from 7.1% in February. This is 0.4pp above your brand average. Karnataka and Tamil Nadu are driving the uplift, while Delhi NCR is lagging at 5.8%. Recommendation: the new "Monsoon Shield" campaign is resonating with mid-range device buyers; consider extending it to Delhi.',
     };
   }
 
@@ -80,7 +80,7 @@ function generateResponse(query: string): ChatMessage {
       role: 'assistant',
       kind: 'action',
       content:
-        'I\u2019ve drafted a campaign based on your request. Review the details below and confirm to create.\n\n• Name: Karnataka Weekend Special\n• Discount: 10% off all plans\n• Duration: Sat, 12 Apr \u2013 Sun, 13 Apr 2026\n• States: Karnataka\n• Expected uplift: +18% vs regular weekend baseline',
+        'I’ve drafted a campaign based on your request. Review the details below and confirm to create.\n\n• Name: Karnataka Weekend Special\n• Discount: 10% off all plans\n• Duration: Sat, 12 Apr – Sun, 13 Apr 2026\n• States: Karnataka\n• Expected uplift: +18% vs regular weekend baseline',
       actionLabel: 'Create campaign',
     };
   }
@@ -226,7 +226,7 @@ export default function AskMpos() {
                 <div className="ask-msg ask-msg-assistant">
                   <div className="ask-msg-header">
                     <AIBadge label="AI" shimmer />
-                    <span className="text-tertiary">Thinking\u2026</span>
+                    <span className="text-tertiary">Thinking…</span>
                   </div>
                   <div className="ask-thinking">
                     <span />
@@ -242,13 +242,13 @@ export default function AskMpos() {
         <div className="ask-input-row">
           <input
             className="ask-input"
-            placeholder="Ask anything about your tenant\u2026"
+            placeholder="Ask anything about your tenant…"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSend()}
           />
           <button className="btn-primary" onClick={() => handleSend()} disabled={!input || thinking}>
-            {thinking ? 'Thinking\u2026' : 'Send'}
+            {thinking ? 'Thinking…' : 'Send'}
           </button>
         </div>
       </div>

@@ -102,11 +102,11 @@ export default function Training() {
               </div>
               <h3>About this course</h3>
               <p className="text-secondary">
-                In this course, you\u2019ll learn the fundamentals of {selectedCourse.title.toLowerCase()}.
-                By the end, you\u2019ll be able to confidently explain coverage, handle common customer questions,
+                In this course, you’ll learn the fundamentals of {selectedCourse.title.toLowerCase()}.
+                By the end, you’ll be able to confidently explain coverage, handle common customer questions,
                 and close sales 25% faster on average.
               </p>
-              <h3>What you\u2019ll learn</h3>
+              <h3>What you’ll learn</h3>
               <ul className="training-list">
                 <li>Product features, pricing, and eligibility criteria</li>
                 <li>How to explain coverage vs. exclusions clearly</li>
@@ -178,7 +178,7 @@ export default function Training() {
         <AIBadge label="New launch" />
         <div>
           <strong>New: Ather EV Protection Specialist</strong>
-          <span className="text-secondary">Become certified on EV battery protection plans \u2014 unlocks new sale categories</span>
+          <span className="text-secondary">Become certified on EV battery protection plans — unlocks new sale categories</span>
         </div>
         <button className="btn-primary">Start learning</button>
       </div>

@@ -41,9 +41,9 @@ export default function MoveUserModal({ users, target, onClose, onConfirm }: Pro
         <div className="dn-modal-header">
           <div>
             <div className="dn-modal-title">Move user</div>
-            <div className="dn-modal-sub">{target.name} \u00b7 {target.group}</div>
+            <div className="dn-modal-sub">{target.name} · {target.group}</div>
           </div>
-          <button className="dn-close" onClick={onClose} aria-label="Close">\u2715</button>
+          <button className="dn-close" onClick={onClose} aria-label="Close">✕</button>
         </div>
 
         <div className="dn-modal-body">
@@ -56,7 +56,7 @@ export default function MoveUserModal({ users, target, onClose, onConfirm }: Pro
               <div>
                 <strong>{oldParentName}</strong>
                 {target.parentId && (
-                  <span> \u00b7 {users.find((u) => u.id === target.parentId)?.group}</span>
+                  <span> · {users.find((u) => u.id === target.parentId)?.group}</span>
                 )}
               </div>
             </div>
@@ -64,9 +64,9 @@ export default function MoveUserModal({ users, target, onClose, onConfirm }: Pro
 
           {children.length > 0 && (
             <div className="dn-info-box">
-              <span className="dn-info-icon">\u2139</span>
+              <span className="dn-info-icon">ℹ</span>
               <div>
-                This user has <strong>{children.length} child{children.length !== 1 ? 'ren' : ''}</strong>. They will stay with {target.name} under the new parent. You can reassign them separately from each user\u2019s action menu.
+                This user has <strong>{children.length} child{children.length !== 1 ? 'ren' : ''}</strong>. They will stay with {target.name} under the new parent. You can reassign them separately from each user’s action menu.
               </div>
             </div>
           )}
@@ -98,7 +98,7 @@ export default function MoveUserModal({ users, target, onClose, onConfirm }: Pro
                       </div>
                       <div>
                         <div className="dn-user-name">{p.name}</div>
-                        <div className="dn-user-sub">{p.phone} \u00b7 {p.group}</div>
+                        <div className="dn-user-sub">{p.phone} · {p.group}</div>
                       </div>
                     </button>
                   ))
@@ -107,7 +107,7 @@ export default function MoveUserModal({ users, target, onClose, onConfirm }: Pro
             )}
             {selectedParent && (
               <div className="dn-field-hint success">
-                <span>\u2713</span> Will report to {selectedParent.name}
+                <span>✓</span> Will report to {selectedParent.name}
                 <button className="dn-btn-ghost dn-link-btn" onClick={() => setSelectedParentId(null)}>Change</button>
               </div>
             )}
@@ -117,7 +117,7 @@ export default function MoveUserModal({ users, target, onClose, onConfirm }: Pro
         <div className="dn-modal-footer">
           <button className="dn-btn-ghost" onClick={onClose}>Cancel</button>
           <button className="dn-btn-primary" onClick={confirm} disabled={!selectedParentId || loading}>
-            {loading ? <><Spinner size={14} /> Moving\u2026</> : 'Confirm move'}
+            {loading ? <><Spinner size={14} /> Moving…</> : 'Confirm move'}
           </button>
         </div>
       </div>

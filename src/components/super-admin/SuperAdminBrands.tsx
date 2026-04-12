@@ -13,12 +13,12 @@ interface BrandEntry {
 }
 
 const brandsData: BrandEntry[] = [
-  { id: 'b1', name: 'Samsung', vertical: 'Electronics Retail', dealers: 234, policies: 24512, gwp: '\u20B910.2Cr', status: 'active', logo: 'S' },
-  { id: 'b2', name: 'Xiaomi', vertical: 'Electronics Retail', dealers: 189, policies: 18234, gwp: '\u20B97.1Cr', status: 'active', logo: 'X' },
-  { id: 'b3', name: 'Ather', vertical: 'EV 2-Wheeler', dealers: 145, policies: 12890, gwp: '\u20B96.8Cr', status: 'active', logo: 'A' },
-  { id: 'b4', name: 'Ola', vertical: 'EV 2-Wheeler', dealers: 132, policies: 10234, gwp: '\u20B94.5Cr', status: 'active', logo: 'O' },
-  { id: 'b5', name: 'Bajaj', vertical: 'EV 2-Wheeler', dealers: 112, policies: 8123, gwp: '\u20B92.8Cr', status: 'onboarding', logo: 'B' },
-  { id: 'b6', name: 'TVS', vertical: 'EV 2-Wheeler', dealers: 78, policies: 4241, gwp: '\u20B91.1Cr', status: 'active', logo: 'T' },
+  { id: 'b1', name: 'Samsung', vertical: 'Electronics Retail', dealers: 234, policies: 24512, gwp: '₹10.2Cr', status: 'active', logo: 'S' },
+  { id: 'b2', name: 'Xiaomi', vertical: 'Electronics Retail', dealers: 189, policies: 18234, gwp: '₹7.1Cr', status: 'active', logo: 'X' },
+  { id: 'b3', name: 'Ather', vertical: 'EV 2-Wheeler', dealers: 145, policies: 12890, gwp: '₹6.8Cr', status: 'active', logo: 'A' },
+  { id: 'b4', name: 'Ola', vertical: 'EV 2-Wheeler', dealers: 132, policies: 10234, gwp: '₹4.5Cr', status: 'active', logo: 'O' },
+  { id: 'b5', name: 'Bajaj', vertical: 'EV 2-Wheeler', dealers: 112, policies: 8123, gwp: '₹2.8Cr', status: 'onboarding', logo: 'B' },
+  { id: 'b6', name: 'TVS', vertical: 'EV 2-Wheeler', dealers: 78, policies: 4241, gwp: '₹1.1Cr', status: 'active', logo: 'T' },
 ];
 
 const statusBadge: Record<string, string> = {

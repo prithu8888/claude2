@@ -6,7 +6,7 @@ import './DistributorDashboard.css';
 const distributorMetrics = [
   { icon: '\u{1F3EA}', label: 'Total Dealers', value: '8' },
   { icon: '\u2705', label: 'Active Dealers', value: '6' },
-  { icon: '\u{1F4B8}', label: 'Total GWP', value: '\u20B942.5L' },
+  { icon: '\u{1F4B8}', label: 'Total GWP', value: '₹42.5L' },
   { icon: '\u{1F4CA}', label: 'Claims Ratio', value: '12.4%' },
 ];
 
