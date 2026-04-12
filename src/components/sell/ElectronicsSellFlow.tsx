@@ -7,7 +7,7 @@ import './SellFlow.css';
 const STEPS = ['Scan IMEI', 'Select Product', 'Select Plans', 'Confirm'];
 
 function formatCurrency(amount: number): string {
-  return '\u20B9' + amount.toLocaleString('en-IN');
+  return '₹' + amount.toLocaleString('en-IN');
 }
 
 function generatePolicyNumber(): string {
@@ -36,7 +36,7 @@ function StepperBar({ currentStep, steps }: Stepper) {
               <div
                 className={`stepper-circle${isActive ? ' active' : ''}${isCompleted ? ' completed' : ''}`}
               >
-                {isCompleted ? '\u2713' : stepNum}
+                {isCompleted ? '✓' : stepNum}
               </div>
               <span
                 className={`stepper-label${isActive ? ' active' : ''}${isCompleted ? ' completed' : ''}`}
@@ -290,7 +290,7 @@ export default function ElectronicsSellFlow() {
                   </div>
                   <div className="plan-card-tenure">
                     <span className="badge badge-purple plan-type-badge">{plan.type}</span>
-                    {' \u00B7 '}
+                    {' · '}
                     {plan.tenure}
                   </div>
                   <div className="plan-card-coverage">

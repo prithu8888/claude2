@@ -66,7 +66,7 @@ export default function AddUserModal({ users, onClose, onSubmit }: Props) {
             <div className="dn-modal-title">Add user</div>
             <div className="dn-modal-sub">Add a single dealer, sub-dealer, or promoter to your network.</div>
           </div>
-          <button className="dn-close" onClick={onClose} aria-label="Close">\u2715</button>
+          <button className="dn-close" onClick={onClose} aria-label="Close">✕</button>
         </div>
 
         <div className="dn-modal-body">
@@ -91,12 +91,12 @@ export default function AddUserModal({ users, onClose, onSubmit }: Props) {
             />
             {duplicatePhone && (
               <div className="dn-field-hint error">
-                <span>\u2715</span> This phone number is already registered to {users.find((u) => u.phone === phone)?.name}.
+                <span>✕</span> This phone number is already registered to {users.find((u) => u.phone === phone)?.name}.
               </div>
             )}
             {phoneValid && (
               <div className="dn-field-hint success">
-                <span>\u2713</span> Phone number is available
+                <span>✓</span> Phone number is available
               </div>
             )}
             {phone.length > 0 && phone.length < 10 && (
@@ -120,7 +120,7 @@ export default function AddUserModal({ users, onClose, onSubmit }: Props) {
               <option value="Promoter">Promoter</option>
             </select>
             <div className="dn-field-hint">
-              {group === 'Dealer' && 'Top of hierarchy \u2014 has no parent.'}
+              {group === 'Dealer' && 'Top of hierarchy — has no parent.'}
               {group === 'Sub-dealer' && 'Reports to a Dealer.'}
               {group === 'Promoter' && 'Reports to a Sub-dealer.'}
             </div>
@@ -155,7 +155,7 @@ export default function AddUserModal({ users, onClose, onSubmit }: Props) {
                         <div className="dn-user-avatar">{p.name.split(' ').map((n) => n[0]).join('').slice(0, 2)}</div>
                         <div>
                           <div className="dn-user-name">{p.name}</div>
-                          <div className="dn-user-sub">{p.phone} \u00b7 {p.group}</div>
+                          <div className="dn-user-sub">{p.phone} · {p.group}</div>
                         </div>
                       </button>
                     ))
@@ -164,7 +164,7 @@ export default function AddUserModal({ users, onClose, onSubmit }: Props) {
               )}
               {selectedParent && (
                 <div className="dn-field-hint success">
-                  <span>\u2713</span> Will report to {selectedParent.name}
+                  <span>✓</span> Will report to {selectedParent.name}
                   <button className="dn-btn-ghost dn-link-btn" onClick={() => setSelectedParentId(null)}>Change</button>
                 </div>
               )}

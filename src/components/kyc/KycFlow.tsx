@@ -14,7 +14,7 @@ interface Step {
 }
 
 const dealerSteps: Step[] = [
-  { id: 'gst', title: 'GST Verification', description: 'We\u2019ll auto-fetch your business details' },
+  { id: 'gst', title: 'GST Verification', description: 'We’ll auto-fetch your business details' },
   { id: 'pan', title: 'PAN Verification', description: 'Auto-filled from GST data' },
   { id: 'bank', title: 'Bank Account', description: 'Penny drop verification' },
   { id: 'docs', title: 'Document Upload', description: 'GST certificate & cancelled cheque' },
@@ -145,12 +145,12 @@ export default function KycFlow() {
                 onClick={handleGstFetch}
                 disabled={gstin.length !== 15 || fetchingGst}
               >
-                {fetchingGst ? 'Fetching\u2026' : 'Fetch'}
+                {fetchingGst ? 'Fetching…' : 'Fetch'}
               </button>
             </div>
             <div className="kyc-help">
               <AIBadge shimmer={fetchingGst} />
-              <span>We\u2019ll auto-fetch business name, address, PAN & entity type</span>
+              <span>We’ll auto-fetch business name, address, PAN & entity type</span>
             </div>
           </div>
 
@@ -282,13 +282,13 @@ export default function KycFlow() {
           {pennyDropStatus === 'sending' && (
             <div className="kyc-status-card">
               <div className="kyc-spinner" />
-              <span>Sending \u20B91 to your account\u2026</span>
+              <span>Sending ₹1 to your account…</span>
             </div>
           )}
           {pennyDropStatus === 'waiting' && (
             <div className="kyc-field">
               <div className="kyc-status-card success">
-                <span>&#10003; \u20B91 sent. Check your account.</span>
+                <span>&#10003; ₹1 sent. Check your account.</span>
               </div>
               <label>Enter amount received (in paise)</label>
               <input
@@ -307,7 +307,7 @@ export default function KycFlow() {
               <div className="kyc-result-header">
                 <span className="badge badge-success">&#10003; Bank verified</span>
               </div>
-              <span className="kyc-result-value">Account {'\u2022\u2022\u2022\u2022'}{accountNumber.slice(-4)}</span>
+              <span className="kyc-result-value">Account {'••••'}{accountNumber.slice(-4)}</span>
             </div>
           )}
         </div>
@@ -322,7 +322,7 @@ export default function KycFlow() {
               <div className="kyc-doc-icon">&#128196;</div>
               <div className="kyc-doc-body">
                 <div className="kyc-doc-title">GST Certificate</div>
-                <div className="kyc-doc-sub">{docsUploaded.gst ? 'Uploaded \u2013 GST-cert.pdf' : 'Tap to upload or drag & drop'}</div>
+                <div className="kyc-doc-sub">{docsUploaded.gst ? 'Uploaded – GST-cert.pdf' : 'Tap to upload or drag & drop'}</div>
               </div>
               {docsUploaded.gst && (
                 <div className="kyc-doc-status">
@@ -335,7 +335,7 @@ export default function KycFlow() {
               <div className="kyc-doc-icon">&#128196;</div>
               <div className="kyc-doc-body">
                 <div className="kyc-doc-title">Cancelled Cheque</div>
-                <div className="kyc-doc-sub">{docsUploaded.cheque ? 'Uploaded \u2013 cheque.jpg' : 'Tap to upload or drag & drop'}</div>
+                <div className="kyc-doc-sub">{docsUploaded.cheque ? 'Uploaded – cheque.jpg' : 'Tap to upload or drag & drop'}</div>
               </div>
               {docsUploaded.cheque && <span className="badge badge-success">&#10003;</span>}
             </div>
@@ -350,7 +350,7 @@ export default function KycFlow() {
           <div className="kyc-liveness">
             <div className="kyc-camera-frame">
               {livenessStep === 'idle' && <div className="kyc-camera-icon">&#128247;</div>}
-              {livenessStep === 'detecting' && <div className="kyc-camera-pulse">Detecting\u2026 Blink twice</div>}
+              {livenessStep === 'detecting' && <div className="kyc-camera-pulse">Detecting… Blink twice</div>}
               {livenessStep === 'done' && <div className="kyc-camera-success">&#10003;</div>}
             </div>
             {livenessStep === 'idle' && (
@@ -385,15 +385,15 @@ export default function KycFlow() {
                 <li><span>Business name</span><strong>Sharma Electronics Pvt Ltd</strong></li>
                 <li><span>GSTIN</span><strong>{gstin || '29AABCX1234E1Z5'}</strong></li>
                 <li><span>PAN</span><strong>{pan || 'AABCX1234E'}</strong></li>
-                <li><span>Bank account</span><strong>SBI &bull; \u2022\u2022\u2022\u2022{accountNumber.slice(-4) || '1234'}</strong></li>
+                <li><span>Bank account</span><strong>SBI &bull; ••••{accountNumber.slice(-4) || '1234'}</strong></li>
                 <li><span>Documents</span><strong>2 uploaded</strong></li>
               </ul>
             ) : (
               <ul className="kyc-review-list">
                 <li><span>Name</span><strong>Rahul Sharma</strong></li>
                 <li><span>PAN</span><strong>{pan || 'ABCDE1234F'}</strong></li>
-                <li><span>Aadhaar</span><strong>{'\u2022\u2022\u2022\u2022 \u2022\u2022\u2022\u2022 '}{aadhaar.slice(-4) || '1234'}</strong></li>
-                <li><span>Bank account</span><strong>HDFC &bull; \u2022\u2022\u2022\u2022{accountNumber.slice(-4) || '4521'}</strong></li>
+                <li><span>Aadhaar</span><strong>{'•••• •••• '}{aadhaar.slice(-4) || '1234'}</strong></li>
+                <li><span>Bank account</span><strong>HDFC &bull; ••••{accountNumber.slice(-4) || '4521'}</strong></li>
                 <li><span>Liveness</span><strong>Verified</strong></li>
               </ul>
             )}
@@ -401,7 +401,7 @@ export default function KycFlow() {
               <AIBadge label="AI Insight" />
               <div>
                 <strong>All checks look good.</strong> Expected verification TAT: 2 hours.
-                You\u2019ll be notified via SMS & WhatsApp on approval.
+                You’ll be notified via SMS & WhatsApp on approval.
               </div>
             </div>
           </div>

@@ -105,7 +105,7 @@ export default function SettingsPage() {
               <div className="settings-bank card-inner">
                 <div>
                   <div className="settings-bank-label">Linked bank account</div>
-                  <div>HDFC Bank &bull; \u2022\u2022\u2022\u2022 4521</div>
+                  <div>HDFC Bank &bull; •••• 4521</div>
                 </div>
                 <button className="btn-secondary">Change account</button>
               </div>
@@ -172,7 +172,7 @@ export default function SettingsPage() {
               <div className="settings-sec-item">
                 <div>
                   <div className="settings-sec-title">Two-factor authentication</div>
-                  <div className="text-secondary">Required for withdrawals above \u20B920,000</div>
+                  <div className="text-secondary">Required for withdrawals above ₹20,000</div>
                 </div>
                 <button className="toggle on"><span className="toggle-knob" /></button>
               </div>
@@ -231,7 +231,7 @@ export default function SettingsPage() {
                     <div><span>Policy no.</span><strong>ACK-2026-1432</strong></div>
                     <div><span>Device</span><strong>Redmi Note 13 Pro</strong></div>
                     <div><span>Plan</span><strong>Extended Warranty 1Y</strong></div>
-                    <div><span>Premium</span><strong>\u20B92,199</strong></div>
+                    <div><span>Premium</span><strong>₹2,199</strong></div>
                   </div>
                 </div>
               </div>
@@ -243,7 +243,7 @@ export default function SettingsPage() {
               <h3>Next-of-kin nominee</h3>
               <p className="text-secondary">
                 Register a nominee to receive pending incentive settlements if you become inactive for 90+ days.
-                This action is irreversible \u2014 confirm carefully.
+                This action is irreversible — confirm carefully.
               </p>
               <div className="settings-field-grid">
                 <div className="settings-field">

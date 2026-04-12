@@ -78,7 +78,7 @@ const slides: Slide[] = [
         <rect x="60" y="40" width="280" height="220" rx="16" fill="white" opacity="0.12" />
         <rect x="70" y="50" width="260" height="200" rx="12" fill="white" />
         <text x="90" y="85" fill="#64748B" fontSize="12" fontFamily="DM Sans">Earned this month</text>
-        <text x="90" y="115" fill="#0F172A" fontSize="28" fontWeight="700" fontFamily="DM Sans">\u20B93,450</text>
+        <text x="90" y="115" fill="#0F172A" fontSize="28" fontWeight="700" fontFamily="DM Sans">₹3,450</text>
         <g transform="translate(90 140)">
           {[40, 60, 45, 75, 55, 80, 90].map((h, i) => (
             <rect key={i} x={i * 30} y={100 - h} width="20" height={h} rx="3" fill="#3B82F6" opacity={0.4 + i * 0.08} />
@@ -115,7 +115,7 @@ const slides: Slide[] = [
       <svg viewBox="0 0 400 300" className="demo-illustration">
         <rect x="40" y="60" width="320" height="180" rx="16" fill="white" opacity="0.95" />
         <text x="200" y="120" textAnchor="middle" fill="#1E1B4B" fontSize="22" fontWeight="700" fontFamily="DM Sans">
-          A | \u0905 | \u0905 | \u0C85 | \u0B85
+          A | अ | ꯑ | ಅ | அ
         </text>
         <text x="200" y="160" textAnchor="middle" fill="#64748B" fontSize="13" fontFamily="DM Sans">6 languages supported</text>
         <g>

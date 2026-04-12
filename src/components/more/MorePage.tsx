@@ -7,12 +7,12 @@ export default function MorePage() {
   const { activeRole, authUser, logout } = useAppStore();
 
   const menuItems = [
-    { label: 'Profile & settings', icon: '\u263A', path: '/settings' },
-    { label: 'Tax & Invoices', icon: '\u2637', path: '/invoices' },
-    { label: 'Training', icon: '\u2606', path: '/training' },
-    { label: 'Wallet', icon: '\u25B0', path: '/wallet' },
-    { label: 'Claims', icon: '\u2691', path: '/claims' },
-    { label: 'KYC', icon: '\u270D', path: '/kyc' },
+    { label: 'Profile & settings', icon: '☺', path: '/settings' },
+    { label: 'Tax & Invoices', icon: '☷', path: '/invoices' },
+    { label: 'Training', icon: '☆', path: '/training' },
+    { label: 'Wallet', icon: '▰', path: '/wallet' },
+    { label: 'Claims', icon: '⚑', path: '/claims' },
+    { label: 'KYC', icon: '✍', path: '/kyc' },
   ];
 
   return (

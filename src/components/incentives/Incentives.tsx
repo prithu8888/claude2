@@ -43,7 +43,7 @@ export default function Incentives() {
       return;
     }
     if (amt > 50000) {
-      setWithdrawError('Withdrawals above \u20B950,000 require manager approval');
+      setWithdrawError('Withdrawals above ₹50,000 require manager approval');
       return;
     }
     setWithdrawError(null);
@@ -66,7 +66,7 @@ export default function Incentives() {
       <header className="incentives-header">
         <div>
           <h1 className="page-title">Incentives & Commissions</h1>
-          <p className="text-secondary">Track your earnings and withdraw when you\u2019re ready</p>
+          <p className="text-secondary">Track your earnings and withdraw when you’re ready</p>
         </div>
       </header>
 
@@ -98,7 +98,7 @@ export default function Incentives() {
       <div className="incentive-ai-insight card">
         <AIBadge label="AI Insight" shimmer />
         <div>
-          <strong>You\u2019re on track to earn {formatINR(4200)} this month \u2014 {formatINR(750)} more than last month.</strong>
+          <strong>You’re on track to earn {formatINR(4200)} this month — {formatINR(750)} more than last month.</strong>
           <span className="text-secondary">
             Selling 3 more laptop plans this week would push you to the Platinum tier and unlock a 20% bonus.
           </span>
@@ -198,7 +198,7 @@ export default function Incentives() {
             {withdrawStep === 'processing' && (
               <div className="withdraw-processing">
                 <div className="kyc-spinner" />
-                <h3>Processing\u2026</h3>
+                <h3>Processing…</h3>
                 <p className="text-secondary">Securing your withdrawal request</p>
               </div>
             )}

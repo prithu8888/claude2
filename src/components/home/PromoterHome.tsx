@@ -41,7 +41,7 @@ export default function PromoterHome() {
       <section className="home-ai-nudge">
         <AIBadge label="Suggested for you" shimmer />
         <div>
-          <strong>You\u2019ve sold 8 plans this week.</strong>
+          <strong>You’ve sold 8 plans this week.</strong>
           <span>2 more and you hit Silver tier with 15% commission bonus.</span>
         </div>
       </section>

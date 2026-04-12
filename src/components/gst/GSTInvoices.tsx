@@ -49,17 +49,17 @@ export default function GSTInvoices() {
       <div className="gst-summary-grid">
         <div className="card gst-summary-card">
           <span className="gst-label">Total Invoiced</span>
-          <span className="gst-value">{'\u20B9'}{totalAmount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+          <span className="gst-value">{'₹'}{totalAmount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
           <span className="gst-sub">{invoices.length} invoices</span>
         </div>
         <div className="card gst-summary-card">
           <span className="gst-label">GST Collected</span>
-          <span className="gst-value">{'\u20B9'}{totalGSTCollected.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+          <span className="gst-value">{'₹'}{totalGSTCollected.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
           <span className="gst-sub">18% GST on commissions</span>
         </div>
         <div className="card gst-summary-card">
           <span className="gst-label">GST Payable</span>
-          <span className="gst-value">{'\u20B9'}{totalGSTPayable.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+          <span className="gst-value">{'₹'}{totalGSTPayable.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
           <span className="gst-sub">Pending invoices</span>
         </div>
       </div>
@@ -118,9 +118,9 @@ export default function GSTInvoices() {
                     {inv.type.charAt(0).toUpperCase() + inv.type.slice(1)}
                   </span>
                 </td>
-                <td>{'\u20B9'}{inv.amount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
-                <td>{'\u20B9'}{inv.gst.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
-                <td className="td-bold">{'\u20B9'}{inv.total.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+                <td>{'₹'}{inv.amount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+                <td>{'₹'}{inv.gst.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+                <td className="td-bold">{'₹'}{inv.total.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
                 <td>
                   <span className={`badge ${statusBadge[inv.status]}`}>
                     {inv.status.charAt(0).toUpperCase() + inv.status.slice(1)}

@@ -63,7 +63,7 @@ function DealerNetworkInner() {
       return next;
     });
     const u = users.find((x) => x.id === userId);
-    show('success', `${u?.name ?? 'User'} deactivated${reassignments.length ? ` \u2014 ${reassignments.length} user(s) reassigned` : ''}`);
+    show('success', `${u?.name ?? 'User'} deactivated${reassignments.length ? ` — ${reassignments.length} user(s) reassigned` : ''}`);
     setDeactivateUser(null);
   };
 
@@ -117,8 +117,8 @@ function DealerNetworkInner() {
               <div>
                 <h1 className="dn-title">Dealer network</h1>
                 <p className="dn-subtitle">
-                  {counts.total} users \u00b7 {counts.dealers} dealers, {counts.subDealers} sub-dealers, {counts.promoters} promoters
-                  {counts.inactive > 0 && <> \u00b7 {counts.inactive} inactive</>}
+                  {counts.total} users · {counts.dealers} dealers, {counts.subDealers} sub-dealers, {counts.promoters} promoters
+                  {counts.inactive > 0 && <> · {counts.inactive} inactive</>}
                 </p>
               </div>
               <div className="dn-header-actions">
@@ -132,15 +132,15 @@ function DealerNetworkInner() {
             </header>
 
             <div className="dn-wizard-banner">
-              <div className="dn-wizard-banner-icon">\u{2728}</div>
+              <div className="dn-wizard-banner-icon">✨</div>
               <div className="dn-wizard-banner-body">
                 <div className="dn-wizard-banner-title">First-time setup wizard</div>
                 <div className="dn-wizard-banner-sub">
-                  Onboard your entire team at once \u2014 guided 6-step flow from upload to preview. Takes about 10 minutes.
+                  Onboard your entire team at once — guided 6-step flow from upload to preview. Takes about 10 minutes.
                 </div>
               </div>
               <button className="dn-btn-primary" onClick={() => navigate('/setup-wizard')}>
-                Launch wizard \u2192
+                Launch wizard →
               </button>
             </div>
 
@@ -219,7 +219,7 @@ function DealerNetworkInner() {
                               className="dn-action-menu-btn"
                               onClick={() => setActionMenuId(actionMenuId === u.id ? null : u.id)}
                             >
-                              \u22EF
+                              ⋯
                             </button>
                             {actionMenuId === u.id && (
                               <div className="dn-action-menu" onMouseLeave={() => setActionMenuId(null)}>
@@ -274,7 +274,7 @@ function DealerNetworkInner() {
                 <h1 className="dn-title">User movement</h1>
                 <p className="dn-subtitle">Move any user to a different parent in the hierarchy.</p>
               </div>
-              <button className="dn-btn-ghost" onClick={() => setTab('users')}>\u2190 Back to users</button>
+              <button className="dn-btn-ghost" onClick={() => setTab('users')}>← Back to users</button>
             </header>
             <div className="dn-movement-grid">
               {users.filter((u) => u.parentId).slice(0, 9).map((u) => (
@@ -286,11 +286,11 @@ function DealerNetworkInner() {
                     <div>
                       <div className="dn-user-name">{u.name}</div>
                       <div className="dn-user-sub">
-                        {u.group} \u00b7 reports to {getParentName(users, u.parentId)}
+                        {u.group} · reports to {getParentName(users, u.parentId)}
                       </div>
                     </div>
                   </div>
-                  <span className="dn-movement-arrow">\u8646</span>
+                  <span className="dn-movement-arrow">⇄</span>
                 </button>
               ))}
             </div>

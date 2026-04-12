@@ -81,7 +81,7 @@ export default function DealerBulkUpload({ onBack, onImported }: Props) {
             Upload any partner file format. AI normalises the columns to the MPOS schema.
           </p>
         </div>
-        <button className="dn-btn-ghost" onClick={onBack}>\u2190 Back to users</button>
+        <button className="dn-btn-ghost" onClick={onBack}>← Back to users</button>
       </header>
 
       {stage === 'upload' && (
@@ -93,14 +93,14 @@ export default function DealerBulkUpload({ onBack, onImported }: Props) {
             style={{ display: 'none' }}
             onChange={() => startAnalysis()}
           />
-          <div className="dn-bulk-dropzone-icon">{'\u{1F4E4}'}</div>
+          <div className="dn-bulk-dropzone-icon">{'📤'}</div>
           <div className="dn-bulk-dropzone-title">Drop your partner file here</div>
           <div className="dn-bulk-dropzone-sub">
             CSV, XLS or XLSX. Any column layout. Our AI handles the mapping.
           </div>
           <button className="dn-bulk-simulate" onClick={(e) => { e.stopPropagation(); startAnalysis(); }}>
             <AIBadge label="AI" />
-            Simulate upload \u2014 Xiaomi format
+            Simulate upload — Xiaomi format
           </button>
         </div>
       )}
@@ -110,9 +110,9 @@ export default function DealerBulkUpload({ onBack, onImported }: Props) {
           <Spinner size={20} />
           <div>
             <strong style={{ color: 'var(--dn-text)', display: 'block', marginBottom: 2 }}>
-              Analysing your file\u2026
+              Analysing your file…
             </strong>
-            <span>Reading 9 columns \u00b7 matching to MPOS schema</span>
+            <span>Reading 9 columns · matching to MPOS schema</span>
           </div>
         </div>
       )}
@@ -161,7 +161,7 @@ export default function DealerBulkUpload({ onBack, onImported }: Props) {
 
             <div className="dn-bulk-panel">
               <div className="dn-bulk-panel-header">
-                <div className="dn-bulk-panel-title">Preview \u2014 first 3 rows</div>
+                <div className="dn-bulk-panel-title">Preview — first 3 rows</div>
                 <span className="dn-bulk-panel-sub">After mapping</span>
               </div>
               <div className="dn-bulk-preview">
@@ -198,7 +198,7 @@ export default function DealerBulkUpload({ onBack, onImported }: Props) {
           <div className="dn-bulk-confirm">
             <button className="dn-btn-ghost" onClick={() => setStage('upload')}>Upload different file</button>
             <button className="dn-btn-primary" onClick={runValidation} disabled={stage === 'validating'}>
-              {stage === 'validating' ? <><Spinner size={14} /> Validating\u2026</> : 'Confirm mapping and validate'}
+              {stage === 'validating' ? <><Spinner size={14} /> Validating…</> : 'Confirm mapping and validate'}
             </button>
           </div>
         </>
@@ -225,9 +225,9 @@ export default function DealerBulkUpload({ onBack, onImported }: Props) {
           </div>
 
           <div className="dn-error-row">
-            <div className="dn-error-icon">\u2715</div>
+            <div className="dn-error-icon">✕</div>
             <div className="dn-error-body">
-              <strong>Row 4 failed \u2014 phone number 9840513986 already exists in the system</strong>
+              <strong>Row 4 failed — phone number 9840513986 already exists in the system</strong>
               <span>Remove this row from the file or use a different number.</span>
             </div>
           </div>

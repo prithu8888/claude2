@@ -7,7 +7,7 @@ import './Wallet.css';
 type Tab = 'earnings' | 'transactions';
 
 function formatCurrency(amount: number): string {
-  return '\u20B9' + amount.toLocaleString('en-IN');
+  return '₹' + amount.toLocaleString('en-IN');
 }
 
 function formatDate(dateStr: string): string {
