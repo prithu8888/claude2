@@ -10,6 +10,7 @@
   --wiz-amber-bg: #FAEEDA;
   --wiz-red: #791F1F;
   --wiz-red-bg: #FCEBEB;
+  --wiz-red-border: #E24B4A;
   --wiz-teal: #0F6E56;
   --wiz-teal-bg: #E1F5EE;
   --wiz-purple: #3C3489;
@@ -18,7 +19,8 @@
   --wiz-text: #1A1A1A;
   --wiz-border: #CCCCCC;
   --wiz-border-soft: #E5E5E5;
-  --wiz-bg: #FAFAFA;
+  --wiz-bg: #FFFFFF;
+  --wiz-surface: #F5F8FA;
 
   position: fixed;
   inset: 0;
@@ -151,7 +153,7 @@
 }
 
 .wiz-page {
-  max-width: 680px;
+  max-width: 660px;
   width: 100%;
   animation: wizIn 280ms ease;
 }
@@ -248,7 +250,7 @@
 
 .wiz-note-box {
   padding: 14px 18px;
-  background: #F5F5F3;
+  background: var(--wiz-surface);
   border-radius: 8px;
   font-size: 13px;
   color: var(--wiz-text);
@@ -1150,6 +1152,493 @@
   color: var(--wiz-grey-text);
   margin-top: 20px;
   margin-bottom: 20px;
+}
+
+/* ========== Step 2 v3 — example table ========== */
+
+.wiz-example-table {
+  margin: 20px 0 8px;
+  background: var(--wiz-surface);
+  border-radius: 8px;
+  padding: 4px;
+  overflow: hidden;
+}
+
+.wiz-example-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.wiz-example-table th {
+  text-align: left;
+  padding: 10px 14px;
+  background: white;
+  border-bottom: 0.5px solid var(--wiz-border);
+  font-weight: 600;
+  color: var(--wiz-navy);
+  font-size: 12px;
+}
+.wiz-example-table th:first-child { border-top-left-radius: 6px; }
+.wiz-example-table th:last-child { border-top-right-radius: 6px; }
+
+.wiz-example-table td {
+  padding: 10px 14px;
+  border-bottom: 0.5px solid var(--wiz-border-soft);
+  color: var(--wiz-text);
+  font-family: ui-monospace, 'SF Mono', monospace;
+  font-size: 12px;
+  background: white;
+}
+.wiz-example-table tbody tr:last-child td { border-bottom: none; }
+.wiz-example-table td:first-child {
+  font-family: inherit;
+  font-weight: 500;
+  color: var(--wiz-navy);
+}
+
+.wiz-caption {
+  font-size: 12px;
+  color: var(--wiz-grey-text);
+  margin-bottom: 20px;
+  font-style: italic;
+}
+
+/* ========== Step 3 v3 — Review ========== */
+
+.wiz-review-pills {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.wiz-review-pill {
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 6px;
+}
+.wiz-review-pill-green { background: var(--wiz-green-bg); color: var(--wiz-green); }
+.wiz-review-pill-red { background: var(--wiz-red-bg); color: var(--wiz-red); }
+.wiz-review-pill-red.zero { background: var(--wiz-green-bg); color: var(--wiz-green); }
+.wiz-review-pill-grey { background: var(--wiz-surface); color: var(--wiz-grey-text); }
+
+.wiz-summary-card {
+  padding: 20px 22px;
+  background: white;
+  border: 0.5px solid var(--wiz-border);
+  border-radius: 8px;
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.wiz-summary-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--wiz-grey-text);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin-bottom: 6px;
+}
+
+.wiz-summary-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  color: var(--wiz-text);
+}
+
+.wiz-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.wiz-dot-blue { background: var(--wiz-navy); }
+.wiz-dot-teal { background: var(--wiz-teal); }
+.wiz-dot-purple { background: var(--wiz-purple); }
+
+.wiz-summary-divider {
+  height: 0.5px;
+  background: var(--wiz-border);
+  margin: 6px 0;
+}
+
+.wiz-summary-note {
+  font-size: 12px;
+  color: var(--wiz-grey-text);
+  font-style: italic;
+}
+
+.wiz-error-section-title {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: var(--wiz-red);
+  margin-bottom: 14px;
+}
+
+.wiz-error-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.wiz-review-error {
+  position: relative;
+  padding: 16px;
+  padding-left: 19px;
+  background: white;
+  border: 0.5px solid var(--wiz-border);
+  border-radius: 8px;
+  transition: all 250ms ease;
+}
+.wiz-review-error::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 3px;
+  border-radius: 8px 0 0 8px;
+  background: var(--wiz-red-border);
+  transition: background 250ms ease;
+}
+.wiz-review-error.fixed::before { background: var(--wiz-green); }
+.wiz-review-error.fixed { background: #F8FCF2; }
+.wiz-error-removing {
+  opacity: 0;
+  transform: translateY(-4px);
+  pointer-events: none;
+}
+
+.wiz-review-error-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.wiz-error-type-badge {
+  padding: 3px 10px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  border-radius: 6px;
+  background: var(--wiz-red-bg);
+  color: var(--wiz-red);
+}
+.wiz-error-type-badge.fixed {
+  background: var(--wiz-green-bg);
+  color: var(--wiz-green);
+}
+
+.wiz-review-error-person {
+  font-size: 14px;
+  color: var(--wiz-text);
+  margin-bottom: 10px;
+}
+.wiz-review-error-person strong { color: var(--wiz-navy); margin-right: 4px; }
+.wiz-review-error-person span { color: var(--wiz-grey-text); }
+
+.wiz-review-error-msg {
+  font-size: 13px;
+  color: var(--wiz-red);
+  line-height: 1.55;
+  margin-bottom: 12px;
+}
+
+.wiz-review-inline-edit {
+  padding: 12px;
+  background: var(--wiz-surface);
+  border-radius: 6px;
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.wiz-review-inline-edit label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--wiz-navy);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.wiz-input {
+  padding: 8px 10px;
+  border: 0.5px solid var(--wiz-border);
+  border-radius: 4px;
+  font-size: 13px;
+  color: var(--wiz-text);
+  background: white;
+  font-family: inherit;
+  min-height: 36px;
+  outline: none;
+  transition: all 150ms ease;
+}
+.wiz-input:focus { border-color: var(--wiz-blue); box-shadow: 0 0 0 3px rgba(24, 95, 165, 0.12); }
+.wiz-input-error { border: 1px solid var(--wiz-red-border); background: #FFF8F8; }
+
+.wiz-input-hint {
+  font-size: 11px;
+  color: var(--wiz-grey-text);
+}
+
+.wiz-review-error-actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 8px;
+  align-items: center;
+}
+
+.wiz-cta-hint {
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--wiz-grey-text);
+  text-align: right;
+}
+
+/* ========== Step 4 v3 — root admin node ========== */
+
+.wiz-tree-root {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0;
+}
+
+.wiz-root-node {
+  padding: 14px 20px;
+  background: var(--wiz-navy);
+  color: white;
+  border-radius: 8px;
+  min-width: 220px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(31, 78, 121, 0.2);
+}
+.wiz-root-name {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+.wiz-root-sub {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.7);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+/* Dealer / Sub-dealer / Promoter nodes with coloured top borders */
+
+.wiz-dealer-node {
+  padding: 14px 16px;
+  background: white;
+  border: 0.5px solid var(--wiz-border);
+  border-top: 3px solid var(--wiz-navy);
+  border-radius: 6px;
+  min-width: 160px;
+  max-width: 200px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+  text-align: left;
+  transition: all 200ms ease;
+}
+.wiz-dealer-node.expanded {
+  border-color: var(--wiz-blue);
+  border-top-color: var(--wiz-navy);
+  box-shadow: 0 4px 12px rgba(24, 95, 165, 0.15);
+}
+
+.wiz-dealer-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  background: #EAF2FB;
+  color: var(--wiz-blue);
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+.wiz-dealer-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--wiz-navy);
+  margin-bottom: 2px;
+}
+.wiz-dealer-phone {
+  font-size: 12px;
+  color: var(--wiz-grey-text);
+  font-family: ui-monospace, monospace;
+  margin-bottom: 10px;
+}
+
+.wiz-dealer-expand {
+  width: 100%;
+  padding: 6px 10px;
+  background: var(--wiz-surface);
+  border: none;
+  border-radius: 4px;
+  font-size: 11px;
+  color: var(--wiz-grey-text);
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 150ms ease;
+}
+.wiz-dealer-expand:hover { background: #EAF2FB; color: var(--wiz-blue); }
+.wiz-dealer-expand-active {
+  background: #EAF2FB;
+  color: var(--wiz-blue);
+  font-weight: 600;
+}
+
+.wiz-sub-node {
+  padding: 12px 14px;
+  background: white;
+  border: 0.5px solid var(--wiz-border);
+  border-top: 3px solid var(--wiz-teal);
+  border-radius: 6px;
+  min-width: 160px;
+  max-width: 200px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+  margin: 0 auto;
+}
+.wiz-sub-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  background: var(--wiz-teal-bg);
+  color: var(--wiz-teal);
+  border-radius: 4px;
+  margin-bottom: 6px;
+}
+.wiz-sub-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--wiz-navy);
+}
+.wiz-sub-phone {
+  font-size: 11px;
+  color: var(--wiz-grey-text);
+  font-family: ui-monospace, monospace;
+}
+
+.wiz-prom-node {
+  padding: 10px 12px;
+  background: white;
+  border: 0.5px solid var(--wiz-border);
+  border-top: 3px solid var(--wiz-purple);
+  border-radius: 6px;
+  min-width: 140px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+.wiz-prom-badge {
+  display: inline-block;
+  padding: 1px 7px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  background: var(--wiz-purple-bg);
+  color: var(--wiz-purple);
+  border-radius: 4px;
+  margin-bottom: 4px;
+}
+.wiz-prom-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--wiz-navy);
+}
+.wiz-prom-phone {
+  font-size: 11px;
+  color: var(--wiz-grey-text);
+  font-family: ui-monospace, monospace;
+}
+
+.wiz-tree {
+  padding: 32px 24px;
+  background: white;
+  border: 0.5px solid var(--wiz-border);
+  border-radius: 8px;
+  overflow-x: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.wiz-tree-level-dealers {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.wiz-tree-level-subdealers {
+  display: flex;
+  gap: 32px;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.wiz-tree-subbranch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  flex: 1;
+  max-width: 320px;
+}
+
+.wiz-tree-level-promoters {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+  width: 100%;
+}
+
+.wiz-tree-bottom-note {
+  margin-top: 20px;
+  padding: 12px 16px;
+  background: var(--wiz-surface);
+  border-radius: 6px;
+  font-size: 12px;
+  color: var(--wiz-grey-text);
+  text-align: center;
+}
+
+/* Step 5 (Done) — centered layout */
+
+.wiz-step-done {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+}
+
+.wiz-checkmark-circle {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  background: var(--wiz-green-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: wizCheckIn 350ms cubic-bezier(0.18, 0.89, 0.32, 1.28);
+  margin-bottom: 24px;
 }
 
 /* ========== Responsive ========== */
