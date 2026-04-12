@@ -2,24 +2,26 @@ import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './DealerSetupWizard.css';
 
-type StepId = 1 | 2 | 3 | 4 | 5 | 6;
+type StepId = 1 | 2 | 3 | 4 | 5;
 
 const STEPS: { id: StepId; label: string }[] = [
   { id: 1, label: 'Welcome' },
   { id: 2, label: 'Upload' },
-  { id: 3, label: 'Confirm details' },
-  { id: 4, label: 'Fix errors' },
-  { id: 5, label: 'Preview' },
-  { id: 6, label: 'Done' },
+  { id: 3, label: 'Review' },
+  { id: 4, label: 'Preview' },
+  { id: 5, label: 'Done' },
 ];
 
-// ----- Mock data (inline per spec) -----
+// ----- Mock data -----
 
 interface ErrorRow {
   id: string;
   rowNumber: number;
+  kind: 'missing_parent' | 'duplicate_phone' | 'missing_name';
   name: string;
   phone: string;
+  parentPhone?: string;
+  title: string; // e.g. "Missing manager"
   message: string;
 }
 
@@ -27,52 +29,66 @@ const INITIAL_ERRORS: ErrorRow[] = [
   {
     id: 'e1',
     rowNumber: 4,
+    kind: 'missing_parent',
     name: 'Paul Singarayar',
-    phone: '9840513986',
-    message: 'This phone number is already registered in MPOS under a different account. Please use a different number or remove this person.',
+    phone: '9489391717',
+    parentPhone: '9840513986',
+    title: 'Missing manager',
+    message:
+      "We couldn’t find Paul’s manager. The number 9840513986 isn’t in your file and isn’t already in MPOS. Either add their manager to this file, or enter the correct manager phone number below.",
   },
   {
     id: 'e2',
     rowNumber: 17,
+    kind: 'duplicate_phone',
     name: 'Rajan Muthusamy',
     phone: '9789012345',
-    message: 'We couldn’t find this person’s manager in your file. Check that their manager’s phone number (9876543210) is also in the file.',
+    title: 'Phone already exists',
+    message:
+      'This phone number is already registered in MPOS. This person may already have an account. Use a different number or remove this row.',
   },
   {
     id: 'e3',
     rowNumber: 31,
-    name: 'Unknown',
+    kind: 'missing_name',
+    name: '',
     phone: '9812345678',
-    message: 'This person’s name is missing. Please add their name.',
+    title: 'Name missing',
+    message: 'This person’s name is missing. Please add their name to continue.',
   },
 ];
 
-// Hierarchy preview data
+// Tree data for Step 4 — Dealer 1 fully expanded
 const DEALER_1 = {
   name: 'Mohammed Ali',
   phone: '9856789012',
   subdealers: [
     {
-      name: 'Priya Nair',
-      phone: '9845678901',
-      promoters: [
-        { name: 'Kavya M', phone: '9834567890' },
-        { name: 'Suresh R', phone: '9823456789' },
-        { name: 'Rahul D', phone: '9801234567' },
-      ],
-    },
-    {
       name: 'Amit Singh',
       phone: '9812345678',
       promoters: [
+        { name: 'Suresh R', phone: '9823456789' },
         { name: 'Meera K', phone: '9890123456' },
         { name: 'Vijay S', phone: '9879012345' },
+      ],
+    },
+    {
+      name: 'Kavya M',
+      phone: '9834567890',
+      promoters: [
+        { name: 'Rahul D', phone: '9801234567' },
+        { name: 'Deepa S', phone: '9878901234' },
       ],
     },
   ],
 };
 
-// ----- Helpers -----
+const OTHER_DEALERS = [
+  { name: 'Priya Nair', phone: '9845678901' },
+  { name: 'Arjun Sharma', phone: '9867890123' },
+];
+
+// ----- Stepper -----
 
 function Stepper({ current, completed }: { current: StepId; completed: Set<StepId> }) {
   return (
@@ -102,36 +118,36 @@ function Step1Welcome({ onNext }: { onNext: () => void }) {
   return (
     <div className="wiz-step-content">
       <h1 className="wiz-h1">Welcome to MPOS, Oppo India</h1>
-      <p className="wiz-sub">Let’s get your team set up. This takes about 10 minutes.</p>
+      <p className="wiz-sub">Let’s get your team set up before they start selling. Takes about 10 minutes.</p>
 
       <div className="wiz-info-cards">
         <div className="wiz-info-card">
-          <div className="wiz-info-title">Add your team</div>
+          <div className="wiz-info-title">Upload any file</div>
           <div className="wiz-info-body">
-            Dealers, sub-dealers, and promoters all need to be in the system before anyone can sell.
+            Share whatever spreadsheet you already use. Any column names, any format.
           </div>
         </div>
         <div className="wiz-info-card">
-          <div className="wiz-info-title">Hierarchy matters</div>
+          <div className="wiz-info-title">We figure out the structure</div>
           <div className="wiz-info-body">
-            Promoters report to sub-dealers, sub-dealers report to dealers. We’ll make sure the structure is right.
+            As long as each person has their manager’s phone number, we’ll build the hierarchy automatically.
           </div>
         </div>
         <div className="wiz-info-card">
-          <div className="wiz-info-title">Any file works</div>
+          <div className="wiz-info-title">Fix and confirm</div>
           <div className="wiz-info-body">
-            Upload whatever spreadsheet you already have. We’ll handle the rest.
+            We’ll flag anything that looks off before creating any accounts.
           </div>
         </div>
       </div>
 
       <div className="wiz-note-box">
-        ACKO has already set up your account structure. You just need to add the people.
+        Your account is already set up. You just need to add your dealers, sub-dealers, and promoters.
       </div>
 
       <div className="wiz-footer-solo">
         <button className="wiz-btn-primary wiz-btn-wide" onClick={onNext}>
-          Get started &rarr;
+          Let’s get started &rarr;
         </button>
       </div>
     </div>
@@ -140,7 +156,11 @@ function Step1Welcome({ onNext }: { onNext: () => void }) {
 
 // ----- Step 2: Upload -----
 
-const LOADING_MESSAGES = ['Reading your file…', 'Finding your team…', 'Almost done…'];
+const LOADING_MESSAGES = [
+  'Reading your file…',
+  'Building your team hierarchy…',
+  'Checking for issues…',
+];
 
 function Step2Upload({ onBack, onNext }: { onBack: () => void; onNext: () => void }) {
   const [uploaded, setUploaded] = useState(false);
@@ -153,7 +173,7 @@ function Step2Upload({ onBack, onNext }: { onBack: () => void; onNext: () => voi
     const interval = setInterval(() => {
       msgIdx = Math.min(msgIdx + 1, LOADING_MESSAGES.length - 1);
       setLoadingText(LOADING_MESSAGES[msgIdx]);
-    }, 666);
+    }, 600);
     const finish = setTimeout(onNext, 2000);
     return () => {
       clearInterval(interval);
@@ -175,23 +195,58 @@ function Step2Upload({ onBack, onNext }: { onBack: () => void; onNext: () => voi
   return (
     <div className="wiz-step-content">
       <h1 className="wiz-h1">Upload your team list</h1>
-      <p className="wiz-sub">Share the spreadsheet you use to track your dealers and promoters. Any format works.</p>
+      <p className="wiz-sub">
+        Your file needs three columns: each person’s name, their phone number, and their manager’s phone number.
+        That’s it.
+      </p>
+
+      <div className="wiz-example-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Phone</th>
+              <th>Manager’s phone</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Paul Singarayar</td>
+              <td>9489391717</td>
+              <td>9840513986</td>
+            </tr>
+            <tr>
+              <td>Rajan Kumar</td>
+              <td>9789012345</td>
+              <td>9489391717</td>
+            </tr>
+            <tr>
+              <td>Meera S</td>
+              <td>9812345678</td>
+              <td>9789012345</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p className="wiz-caption">
+        Column names don’t have to match exactly — we’ll figure it out. What matters is that the data is there.
+      </p>
 
       {!uploaded ? (
         <>
           <label className="wiz-dropzone">
             <input type="file" accept=".xlsx,.xls,.csv" style={{ display: 'none' }} onChange={() => setUploaded(true)} />
             <div className="wiz-dropzone-icon">
-              <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
                 <polyline points="17 8 12 3 7 8" />
                 <line x1="12" y1="3" x2="12" y2="15" />
               </svg>
             </div>
             <div className="wiz-dropzone-title">Drag your file here, or click to browse</div>
-            <div className="wiz-dropzone-sub">Excel or CSV — any column names, any format</div>
+            <div className="wiz-dropzone-sub">Excel or CSV</div>
           </label>
-          <button className="wiz-link-grey" type="button">Download our template instead</button>
+          <button className="wiz-link-grey" type="button">Download a sample template</button>
           <button className="wiz-simulate-btn" onClick={() => setUploaded(true)}>
             Simulate: Upload Xiaomi file
           </button>
@@ -201,7 +256,7 @@ function Step2Upload({ onBack, onNext }: { onBack: () => void; onNext: () => voi
           <div className="wiz-upload-success-icon">&#10003;</div>
           <div className="wiz-upload-success-body">
             <div className="wiz-upload-success-title">Xiaomi_onboarding_sample.xlsx</div>
-            <div className="wiz-upload-success-meta">11 columns &middot; 47 rows</div>
+            <div className="wiz-upload-success-meta">11 columns &middot; 47 rows detected</div>
           </div>
           <button className="wiz-link-grey wiz-inline-link" onClick={() => setUploaded(false)}>Remove</button>
         </div>
@@ -214,272 +269,260 @@ function Step2Upload({ onBack, onNext }: { onBack: () => void; onNext: () => voi
           disabled={!uploaded}
           onClick={() => setLoading(true)}
         >
-          Analyse file &rarr;
+          Process file &rarr;
         </button>
       </div>
     </div>
   );
 }
 
-// ----- Step 3: Confirm details (plain-English v2) -----
+// ----- Step 3: Review (pills + hierarchy summary + error cards) -----
 
-// Options available for the two confirmation questions.
-// We keep the list of columns from the source file for Q1 "who's the manager?"
-// and a simple staff-type list for Q2.
-const SOURCE_COLUMNS = [
-  'Xiaomi FSM Mobile number',
-  'PSC Mobile Number',
-  'Xiaomi- PSC ID',
-  'ASC/Center Manager name',
-  'ASC Address',
-  'ASC emai id',
-  'ASP Mobile',
-];
+type ErrorCardStatus = 'pending' | 'fixed' | 'removed';
 
-const STAFF_TYPES = ['Dealer', 'Sub-dealer', 'Promoter', 'Service Center staff', 'Mixed — file has multiple types'];
+function Step3Review({ onBack, onNext }: { onBack: () => void; onNext: () => void }) {
+  const [errors, setErrors] = useState(INITIAL_ERRORS);
+  const [statuses, setStatuses] = useState<Record<string, ErrorCardStatus>>({
+    e1: 'pending',
+    e2: 'pending',
+    e3: 'pending',
+  });
+  const [editing, setEditing] = useState<Set<string>>(new Set(['e3'])); // e3 starts with input shown
+  const [edits, setEdits] = useState<Record<string, { name: string; phone: string; parentPhone: string }>>({});
 
-function Step3Confirm({ onBack, onNext }: { onBack: () => void; onNext: () => void }) {
-  const [managerColumn, setManagerColumn] = useState('Xiaomi FSM Mobile number');
-  const [staffType, setStaffType] = useState('Service Center staff');
-  const [openPicker, setOpenPicker] = useState<null | 'manager' | 'staff'>(null);
+  const visible = errors.filter((e) => statuses[e.id] !== 'removed');
+  const unresolved = visible.filter((e) => statuses[e.id] === 'pending');
+  const unresolvedCount = unresolved.length;
+  const readyCount = 44 + (errors.length - visible.length) + visible.filter((e) => statuses[e.id] === 'fixed').length;
+  const totalCount = 47;
+  const allResolved = unresolvedCount === 0;
 
-  return (
-    <div className="wiz-step-content">
-      <h1 className="wiz-h1">Does this look right?</h1>
-      <p className="wiz-sub">We read your file and found your team. Just confirm a couple of things.</p>
+  const startEdit = (id: string) => {
+    const err = errors.find((e) => e.id === id);
+    if (!err) return;
+    setEdits({
+      ...edits,
+      [id]: {
+        name: edits[id]?.name ?? err.name,
+        phone: edits[id]?.phone ?? '',
+        parentPhone: edits[id]?.parentPhone ?? err.parentPhone ?? '',
+      },
+    });
+    setEditing(new Set([...editing, id]));
+  };
 
-      {/* Section A — What we found (green tinted) */}
-      <div className="wiz-found-card">
-        <div className="wiz-found-row">
-          <div className="wiz-found-icon wiz-found-icon-people">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
-              <circle cx="9" cy="7" r="4" />
-              <path d="M23 21v-2a4 4 0 00-3-3.87" />
-              <path d="M16 3.13a4 4 0 010 7.75" />
-            </svg>
-          </div>
-          <div><strong>47 people</strong> to add</div>
-        </div>
-        <div className="wiz-found-row">
-          <div className="wiz-found-icon wiz-found-icon-hierarchy">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="9" y="3" width="6" height="4" rx="1" />
-              <rect x="3" y="15" width="6" height="4" rx="1" />
-              <rect x="15" y="15" width="6" height="4" rx="1" />
-              <path d="M12 7v4M6 15v-2h12v2" />
-            </svg>
-          </div>
-          <div><strong>3 dealers</strong>, <strong>8 sub-dealers</strong>, <strong>36 promoters</strong></div>
-        </div>
-        <div className="wiz-found-row">
-          <div className="wiz-found-icon wiz-found-icon-check">&#10003;</div>
-          <div>Phone numbers, names, and addresses found</div>
-        </div>
-        <div className="wiz-found-note">No action needed here — we’ve got this covered.</div>
-      </div>
+  const save = (id: string) => {
+    setStatuses({ ...statuses, [id]: 'fixed' });
+    const next = new Set(editing);
+    next.delete(id);
+    setEditing(next);
+  };
 
-      {/* Section B — Just confirm these 2 things */}
-      <div className="wiz-confirm-card">
-        <div className="wiz-confirm-title">Just confirm these 2 things</div>
-
-        {/* Item 1 */}
-        <div className="wiz-confirm-item">
-          <div className="wiz-confirm-question">Who is each person’s manager?</div>
-          <div className="wiz-confirm-context">This tells us who reports to whom in your hierarchy.</div>
-          <div className="wiz-confirm-answer">
-            <span className="wiz-answer-tag">
-              <span className="wiz-answer-check">&#10003;</span>
-              Using: {managerColumn}
-            </span>
-            <button className="wiz-link-grey" onClick={() => setOpenPicker(openPicker === 'manager' ? null : 'manager')}>
-              {openPicker === 'manager' ? 'Close' : 'Change \u2192'}
-            </button>
-          </div>
-          {openPicker === 'manager' && (
-            <div className="wiz-picker">
-              {SOURCE_COLUMNS.map((c) => (
-                <button
-                  key={c}
-                  className={`wiz-picker-option ${managerColumn === c ? 'selected' : ''}`}
-                  onClick={() => { setManagerColumn(c); setOpenPicker(null); }}
-                >
-                  {c}
-                  {managerColumn === c && <span className="wiz-answer-check">&#10003;</span>}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Item 2 */}
-        <div className="wiz-confirm-item">
-          <div className="wiz-confirm-question">What type of staff are in this file?</div>
-          <div className="wiz-confirm-context">This determines what they can do in MPOS.</div>
-          <div className="wiz-confirm-answer">
-            <span className="wiz-answer-tag">
-              <span className="wiz-answer-check">&#10003;</span>
-              {staffType}
-            </span>
-            <button className="wiz-link-grey" onClick={() => setOpenPicker(openPicker === 'staff' ? null : 'staff')}>
-              {openPicker === 'staff' ? 'Close' : 'Change \u2192'}
-            </button>
-          </div>
-          {openPicker === 'staff' && (
-            <div className="wiz-picker">
-              {STAFF_TYPES.map((t) => (
-                <button
-                  key={t}
-                  className={`wiz-picker-option ${staffType === t ? 'selected' : ''}`}
-                  onClick={() => { setStaffType(t); setOpenPicker(null); }}
-                >
-                  {t}
-                  {staffType === t && <span className="wiz-answer-check">&#10003;</span>}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-
-      <div className="wiz-footer">
-        <button className="wiz-btn-ghost" onClick={onBack}>&larr; Back</button>
-        <button className="wiz-btn-primary" onClick={onNext}>
-          Looks right, continue &rarr;
-        </button>
-      </div>
-    </div>
-  );
-}
-
-// ----- Step 4: Fix Errors -----
-
-function Step4Errors({ onBack, onNext }: { onBack: () => void; onNext: () => void }) {
-  const [errors, setErrors] = useState<ErrorRow[]>(INITIAL_ERRORS);
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [editValues, setEditValues] = useState<Record<string, { name: string; phone: string }>>({});
-  const [resolvedIds, setResolvedIds] = useState<Set<string>>(new Set());
-
-  const unresolvedCount = errors.filter((e) => !resolvedIds.has(e.id)).length;
-  const readyCount = 44 + (errors.length - unresolvedCount);
-
-  const handleRemove = (id: string) => {
-    // fade out via CSS then remove
+  const remove = (id: string) => {
+    // Fade out visually first
     const el = document.getElementById(`err-${id}`);
     if (el) el.classList.add('wiz-error-removing');
     setTimeout(() => {
-      setErrors((prev) => prev.filter((e) => e.id !== id));
-    }, 250);
+      setStatuses((s) => ({ ...s, [id]: 'removed' }));
+      setErrors((e) => e.filter((x) => x.id !== id));
+    }, 220);
   };
-
-  const handleEditStart = (err: ErrorRow) => {
-    setEditingId(err.id);
-    setEditValues({ ...editValues, [err.id]: { name: err.name, phone: err.phone } });
-  };
-
-  const handleEditSave = (id: string) => {
-    setErrors((prev) =>
-      prev.map((e) => (e.id === id ? { ...e, ...editValues[id] } : e)),
-    );
-    setResolvedIds(new Set([...resolvedIds, id]));
-    setEditingId(null);
-  };
-
-  const allResolved = unresolvedCount === 0;
 
   return (
     <div className="wiz-step-content">
-      <h1 className="wiz-h1">Almost ready — {unresolvedCount} {unresolvedCount === 1 ? 'thing needs' : 'things need'} your attention</h1>
-      <p className="wiz-sub">Fix or remove these rows, then we’re good to go.</p>
+      <h1 className="wiz-h1">Review your team</h1>
+      <p className="wiz-sub">We’ve processed your file and mapped everyone into the hierarchy.</p>
 
-      <div className="wiz-green-summary">
-        <span className="wiz-green-summary-icon">&#10003;</span>
-        {readyCount} rows are ready to be created
+      {/* Stat pills */}
+      <div className="wiz-review-pills">
+        <span className="wiz-review-pill wiz-review-pill-green">{readyCount} ready</span>
+        <span className={`wiz-review-pill wiz-review-pill-red ${unresolvedCount === 0 ? 'zero' : ''}`}>
+          {unresolvedCount} need fixing
+        </span>
+        <span className="wiz-review-pill wiz-review-pill-grey">{totalCount} total</span>
       </div>
 
-      {allResolved && errors.length > 0 && (
+      {/* Hierarchy summary card */}
+      <div className="wiz-summary-card">
+        <div className="wiz-summary-title">What we found</div>
+        <div className="wiz-summary-row">
+          <span className="wiz-dot wiz-dot-blue" />
+          <span><strong>3 Dealers</strong> identified</span>
+        </div>
+        <div className="wiz-summary-row">
+          <span className="wiz-dot wiz-dot-teal" />
+          <span><strong>8 Sub-dealers</strong> identified</span>
+        </div>
+        <div className="wiz-summary-row">
+          <span className="wiz-dot wiz-dot-purple" />
+          <span><strong>33 Promoters</strong> identified</span>
+        </div>
+        <div className="wiz-summary-divider" />
+        <div className="wiz-summary-note">
+          Groups were assigned automatically based on each person’s manager.
+        </div>
+      </div>
+
+      {/* Error section */}
+      {unresolvedCount > 0 && (
+        <div className="wiz-error-section-title">
+          {unresolvedCount} {unresolvedCount === 1 ? 'row needs' : 'rows need'} your attention
+        </div>
+      )}
+
+      {allResolved && errors.length !== visible.length && (
+        <div className="wiz-all-sorted-bar">
+          <span className="wiz-green-summary-icon">&#10003;</span>
+          All sorted — {readyCount} rows ready to create
+        </div>
+      )}
+      {allResolved && errors.length === visible.length && visible.length > 0 && (
         <div className="wiz-all-sorted-bar">
           <span className="wiz-green-summary-icon">&#10003;</span>
           All sorted — {readyCount} rows ready to create
         </div>
       )}
 
-      {errors.length > 0 && (
-        <div className={`wiz-errors-section ${allResolved ? 'all-resolved' : ''}`}>
-          <div className="wiz-errors-header">
-            {allResolved ? 'All errors resolved.' : `${unresolvedCount} row${unresolvedCount !== 1 ? 's' : ''} need fixing`}
-          </div>
-          <div className="wiz-error-list">
-            {errors.map((err) => {
-              const resolved = resolvedIds.has(err.id);
-              const editing = editingId === err.id;
-              return (
-                <div key={err.id} id={`err-${err.id}`} className={`wiz-error-card ${resolved ? 'resolved' : ''}`}>
-                  <div className="wiz-error-head">
-                    <span className="wiz-row-badge">Row {err.rowNumber}</span>
-                    <div className="wiz-error-info">
-                      <strong>{err.name || <em>(blank)</em>}</strong>
-                      <span>&middot; Phone: {err.phone}</span>
+      <div className="wiz-error-list">
+        {errors.map((err) => {
+          const status = statuses[err.id];
+          const isEditing = editing.has(err.id);
+          const isFixed = status === 'fixed';
+          return (
+            <div
+              key={err.id}
+              id={`err-${err.id}`}
+              className={`wiz-review-error ${isFixed ? 'fixed' : ''}`}
+            >
+              <div className="wiz-review-error-top">
+                <span className="wiz-row-badge">Row {err.rowNumber}</span>
+                <span className={`wiz-error-type-badge ${isFixed ? 'fixed' : ''}`}>
+                  {isFixed ? '\u2713 Fixed' : err.title}
+                </span>
+              </div>
+
+              <div className="wiz-review-error-person">
+                <strong>{edits[err.id]?.name || err.name || 'Unknown'}</strong>
+                <span>&middot; {err.phone}</span>
+              </div>
+
+              {!isFixed && (
+                <>
+                  <div className="wiz-review-error-msg">{err.message}</div>
+
+                  {/* Missing parent — always show input */}
+                  {err.kind === 'missing_parent' && (
+                    <div className="wiz-review-inline-edit">
+                      <label>Manager’s phone number</label>
+                      <input
+                        className="wiz-input wiz-input-error"
+                        defaultValue={err.parentPhone}
+                        value={edits[err.id]?.parentPhone ?? err.parentPhone ?? ''}
+                        onChange={(e) => setEdits({
+                          ...edits,
+                          [err.id]: { ...edits[err.id], name: err.name, phone: err.phone, parentPhone: e.target.value.replace(/\D/g, '').slice(0, 10) },
+                        })}
+                      />
+                      <div className="wiz-input-hint">
+                        Enter the phone of someone already in MPOS or in your file
+                      </div>
+                      <div className="wiz-review-error-actions">
+                        <button className="wiz-link-blue" onClick={() => save(err.id)}>
+                          Save
+                        </button>
+                        <button className="wiz-link-grey" onClick={() => remove(err.id)}>
+                          Remove Paul from this upload
+                        </button>
+                      </div>
                     </div>
-                    {resolved && <span className="wiz-resolved-check">&#10003; Fixed</span>}
-                  </div>
-                  {!resolved && (
+                  )}
+
+                  {/* Duplicate phone — link that expands input */}
+                  {err.kind === 'duplicate_phone' && (
                     <>
-                      <div className="wiz-error-msg">{err.message}</div>
-                      {!editing ? (
-                        <div className="wiz-error-actions">
-                          <button className="wiz-btn-secondary" onClick={() => handleEditStart(err)}>
-                            Edit this row
+                      {!isEditing ? (
+                        <div className="wiz-review-error-actions">
+                          <button className="wiz-link-blue" onClick={() => startEdit(err.id)}>
+                            Enter a different number
                           </button>
-                          <button className="wiz-btn-secondary wiz-btn-danger-secondary" onClick={() => handleRemove(err.id)}>
-                            Remove this row
+                          <button className="wiz-link-grey" onClick={() => remove(err.id)}>
+                            Remove Rajan from this upload
                           </button>
                         </div>
                       ) : (
-                        <div className="wiz-error-edit">
-                          <div className="wiz-edit-grid">
-                            <div className="wiz-field">
-                              <label>Name</label>
-                              <input
-                                className="wiz-input"
-                                value={editValues[err.id]?.name ?? ''}
-                                onChange={(e) => setEditValues({ ...editValues, [err.id]: { ...editValues[err.id], name: e.target.value } })}
-                              />
-                            </div>
-                            <div className="wiz-field">
-                              <label>Phone</label>
-                              <input
-                                className="wiz-input"
-                                value={editValues[err.id]?.phone ?? ''}
-                                onChange={(e) => setEditValues({ ...editValues, [err.id]: { ...editValues[err.id], phone: e.target.value.replace(/\D/g, '').slice(0, 10) } })}
-                              />
-                            </div>
-                          </div>
-                          <div className="wiz-error-actions">
-                            <button className="wiz-btn-ghost" onClick={() => setEditingId(null)}>Cancel</button>
-                            <button className="wiz-btn-primary wiz-btn-small" onClick={() => handleEditSave(err.id)}>
-                              Save changes
+                        <div className="wiz-review-inline-edit">
+                          <label>New phone number</label>
+                          <input
+                            className="wiz-input wiz-input-error"
+                            placeholder="10-digit number"
+                            value={edits[err.id]?.phone ?? ''}
+                            onChange={(e) => setEdits({
+                              ...edits,
+                              [err.id]: { ...edits[err.id], name: err.name, phone: e.target.value.replace(/\D/g, '').slice(0, 10), parentPhone: '' },
+                            })}
+                          />
+                          <div className="wiz-review-error-actions">
+                            <button className="wiz-link-blue" onClick={() => save(err.id)}>
+                              Save
+                            </button>
+                            <button className="wiz-link-grey" onClick={() => remove(err.id)}>
+                              Remove Rajan from this upload
                             </button>
                           </div>
                         </div>
                       )}
                     </>
                   )}
-                </div>
-              );
-            })}
-          </div>
-        </div>
+
+                  {/* Missing name — immediate input */}
+                  {err.kind === 'missing_name' && (
+                    <div className="wiz-review-inline-edit">
+                      <label>Name</label>
+                      <input
+                        className="wiz-input wiz-input-error"
+                        placeholder="Enter their full name"
+                        value={edits[err.id]?.name ?? ''}
+                        onChange={(e) => setEdits({
+                          ...edits,
+                          [err.id]: { ...edits[err.id], name: e.target.value, phone: err.phone, parentPhone: '' },
+                        })}
+                      />
+                      <div className="wiz-review-error-actions">
+                        <button className="wiz-link-blue" onClick={() => save(err.id)}>
+                          Save
+                        </button>
+                        <button className="wiz-link-grey" onClick={() => remove(err.id)}>
+                          Remove from this upload
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      {!allResolved && (
+        <div className="wiz-cta-hint">Fix or remove the {unresolvedCount} row{unresolvedCount !== 1 ? 's' : ''} above to continue.</div>
       )}
 
       <div className="wiz-footer wiz-footer-wide">
         <button className="wiz-btn-ghost" onClick={onBack}>&larr; Back</button>
         <div className="wiz-footer-right">
-          <button className="wiz-link-grey" title="Skipped rows will not be created. You can re-upload them anytime.">
-            Skip for now — I’ll fix these later
+          <button
+            className="wiz-link-grey"
+            title="These 3 people won’t be created now. You can add them anytime from the dashboard."
+          >
+            Skip all — I’ll fix these later
           </button>
-          <button className="wiz-btn-primary" disabled={!allResolved} onClick={onNext}>
-            Preview hierarchy &rarr;
+          <button
+            className="wiz-btn-primary"
+            disabled={!allResolved}
+            onClick={onNext}
+          >
+            Preview my team &rarr;
           </button>
         </div>
       </div>
@@ -487,11 +530,12 @@ function Step4Errors({ onBack, onNext }: { onBack: () => void; onNext: () => voi
   );
 }
 
-// ----- Step 5: Hierarchy Preview -----
+// ----- Step 4: Preview with root admin node -----
 
-function Step5Preview({ onBack, onNext }: { onBack: () => void; onNext: () => void }) {
+function Step4Preview({ onBack, onNext }: { onBack: () => void; onNext: () => void }) {
   const [expanded, setExpanded] = useState<Set<string>>(new Set(['d1']));
   const [allExpanded, setAllExpanded] = useState(false);
+  const [creating, setCreating] = useState(false);
 
   const toggle = (id: string) => {
     const next = new Set(expanded);
@@ -505,19 +549,35 @@ function Step5Preview({ onBack, onNext }: { onBack: () => void; onNext: () => vo
       setExpanded(new Set());
       setAllExpanded(false);
     } else {
-      setExpanded(new Set(['d1', 'd2', 'd3', 'sd1a', 'sd1b', 'sd2a', 'sd2b', 'sd2c', 'sd3a', 'sd3b', 'sd3c']));
+      setExpanded(new Set(['d1', 'd2', 'd3']));
       setAllExpanded(true);
     }
   };
 
+  const handleCreate = () => {
+    setCreating(true);
+    setTimeout(onNext, 1500);
+  };
+
+  if (creating) {
+    return (
+      <div className="wiz-step-content">
+        <div className="wiz-loading-block">
+          <div className="wiz-big-spinner" />
+          <div className="wiz-loading-text">Creating accounts…</div>
+        </div>
+      </div>
+    );
+  }
+
   const d1Expanded = expanded.has('d1');
-  const sd1aExpanded = expanded.has('sd1a') || allExpanded;
-  const sd1bExpanded = expanded.has('sd1b') || allExpanded;
+  const d2Expanded = expanded.has('d2') || allExpanded;
+  const d3Expanded = expanded.has('d3') || allExpanded;
 
   return (
     <div className="wiz-step-content wiz-step-wide">
-      <h1 className="wiz-h1">Your team, ready to go</h1>
-      <p className="wiz-sub">This is what we’re about to create. Take a look before we commit.</p>
+      <h1 className="wiz-h1">Your team is ready</h1>
+      <p className="wiz-sub">Take a look at the hierarchy before we create the accounts.</p>
 
       <div className="wiz-stats-row">
         <span className="wiz-stat-pill wiz-stat-blue">3 Dealers</span>
@@ -533,74 +593,76 @@ function Step5Preview({ onBack, onNext }: { onBack: () => void; onNext: () => vo
       </div>
 
       <div className="wiz-tree">
-        {/* Dealer 1 — fully expanded by default */}
-        <div className="wiz-tree-level wiz-tree-level-dealers">
-          <TreeNode
-            type="dealer"
+        {/* Root admin node */}
+        <div className="wiz-tree-root">
+          <div className="wiz-root-node">
+            <div className="wiz-root-name">Oppo India Admin</div>
+            <div className="wiz-root-sub">Root account &mdash; already exists</div>
+          </div>
+        </div>
+
+        <div className="wiz-tree-connector" />
+
+        {/* Dealers */}
+        <div className="wiz-tree-level-dealers">
+          <DealerNode
             name={DEALER_1.name}
             phone={DEALER_1.phone}
             expanded={d1Expanded}
             onToggle={() => toggle('d1')}
-            count={`${DEALER_1.subdealers.length} sub-dealers, ${DEALER_1.subdealers.reduce((a, s) => a + s.promoters.length, 0)} promoters`}
+            collapsedLabel="Tap to see 2 sub-dealers, 5 promoters"
           />
-          <TreeNode
-            type="dealer"
-            name="Suresh Bhat"
-            phone="9767654321"
-            expanded={expanded.has('d2') || allExpanded}
+          <DealerNode
+            name={OTHER_DEALERS[0].name}
+            phone={OTHER_DEALERS[0].phone}
+            expanded={d2Expanded}
             onToggle={() => toggle('d2')}
-            count="5 sub-dealers, 14 promoters"
+            collapsedLabel="Tap to see 3 sub-dealers, 11 promoters"
           />
-          <TreeNode
-            type="dealer"
-            name="Farida Qureshi"
-            phone="9656543210"
-            expanded={expanded.has('d3') || allExpanded}
+          <DealerNode
+            name={OTHER_DEALERS[1].name}
+            phone={OTHER_DEALERS[1].phone}
+            expanded={d3Expanded}
             onToggle={() => toggle('d3')}
-            count="5 sub-dealers, 14 promoters"
+            collapsedLabel="Tap to see 3 sub-dealers, 11 promoters"
           />
         </div>
 
         {d1Expanded && (
           <>
             <div className="wiz-tree-connector" />
-            <div className="wiz-tree-level wiz-tree-level-subdealers">
-              {DEALER_1.subdealers.map((sd, i) => {
-                const sdKey = i === 0 ? 'sd1a' : 'sd1b';
-                const sdExpanded = i === 0 ? sd1aExpanded : sd1bExpanded;
-                return (
-                  <div key={sdKey} className="wiz-tree-subbranch">
-                    <TreeNode
-                      type="subdealer"
-                      name={sd.name}
-                      phone={sd.phone}
-                      expanded={sdExpanded}
-                      onToggle={() => toggle(sdKey)}
-                      count={`${sd.promoters.length} promoters`}
-                    />
-                    {sdExpanded && (
-                      <>
-                        <div className="wiz-tree-connector" />
-                        <div className="wiz-tree-level-promoters">
-                          {sd.promoters.map((p) => (
-                            <TreeNode key={p.phone} type="promoter" name={p.name} phone={p.phone} />
-                          ))}
-                        </div>
-                      </>
-                    )}
+            <div className="wiz-tree-level-subdealers">
+              {DEALER_1.subdealers.map((sd) => (
+                <div key={sd.phone} className="wiz-tree-subbranch">
+                  <div className="wiz-sub-node">
+                    <div className="wiz-sub-badge">Sub-dealer</div>
+                    <div className="wiz-sub-name">{sd.name}</div>
+                    <div className="wiz-sub-phone">{sd.phone}</div>
                   </div>
-                );
-              })}
+                  <div className="wiz-tree-connector" />
+                  <div className="wiz-tree-level-promoters">
+                    {sd.promoters.map((p) => (
+                      <div key={p.phone} className="wiz-prom-node">
+                        <div className="wiz-prom-badge">Promoter</div>
+                        <div className="wiz-prom-name">{p.name}</div>
+                        <div className="wiz-prom-phone">{p.phone}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
             </div>
           </>
         )}
       </div>
 
-      <p className="wiz-tree-note">Everything looks correct? Once you confirm, we’ll create all 44 accounts.</p>
+      <div className="wiz-tree-bottom-note">
+        Once you confirm, all 44 accounts will be created. This cannot be undone from this screen.
+      </div>
 
       <div className="wiz-footer">
         <button className="wiz-btn-ghost" onClick={onBack}>&larr; Back</button>
-        <button className="wiz-btn-primary wiz-btn-large" onClick={onNext}>
+        <button className="wiz-btn-primary wiz-btn-large" onClick={handleCreate}>
           Create 44 accounts &rarr;
         </button>
       </div>
@@ -608,79 +670,78 @@ function Step5Preview({ onBack, onNext }: { onBack: () => void; onNext: () => vo
   );
 }
 
-function TreeNode({
-  type,
+function DealerNode({
   name,
   phone,
   expanded,
   onToggle,
-  count,
+  collapsedLabel,
 }: {
-  type: 'dealer' | 'subdealer' | 'promoter';
   name: string;
   phone: string;
-  expanded?: boolean;
-  onToggle?: () => void;
-  count?: string;
+  expanded: boolean;
+  onToggle: () => void;
+  collapsedLabel: string;
 }) {
   return (
-    <div className={`wiz-tree-node wiz-tree-node-${type}`}>
-      <div className="wiz-tree-node-name">{name}</div>
-      <div className="wiz-tree-node-phone">{phone}</div>
-      {count && onToggle && (
-        <button className="wiz-tree-expand" onClick={onToggle}>
-          {expanded ? '\u2212' : '+'} {count}
+    <div className={`wiz-dealer-node ${expanded ? 'expanded' : ''}`}>
+      <div className="wiz-dealer-badge">Dealer</div>
+      <div className="wiz-dealer-name">{name}</div>
+      <div className="wiz-dealer-phone">{phone}</div>
+      {!expanded && (
+        <button className="wiz-dealer-expand" onClick={onToggle}>
+          {collapsedLabel}
+        </button>
+      )}
+      {expanded && (
+        <button className="wiz-dealer-expand wiz-dealer-expand-active" onClick={onToggle}>
+          Collapse
         </button>
       )}
     </div>
   );
 }
 
-// ----- Step 6: Done -----
+// ----- Step 5: Done -----
 
-function Step6Done({ onGoToDashboard }: { onGoToDashboard: () => void }) {
+function Step5Done({ onGoToDashboard }: { onGoToDashboard: () => void }) {
   return (
-    <div className="wiz-step-content">
-      <div className="wiz-done-banner">
-        <span className="wiz-done-banner-icon">&#10003;</span>
-        44 accounts created
-      </div>
-
+    <div className="wiz-step-content wiz-step-done">
       <div className="wiz-checkmark-anim">
         <div className="wiz-checkmark-circle">
-          <svg viewBox="0 0 52 52" width="60" height="60">
-            <path fill="none" stroke="white" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" d="M14 27 l8 8 l16 -16" />
+          <svg viewBox="0 0 52 52" width="52" height="52">
+            <path fill="none" stroke="#3B6D11" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" d="M14 27 l8 8 l16 -16" />
           </svg>
         </div>
       </div>
 
       <h1 className="wiz-h1 wiz-h1-center">Your team is live</h1>
       <p className="wiz-sub wiz-sub-center">
-        44 dealers, sub-dealers, and promoters are now in MPOS and can start selling.
+        44 accounts created. Your dealers, sub-dealers, and promoters can now log in and start selling.
       </p>
 
       <div className="wiz-done-cards">
         <div className="wiz-done-card">
-          <div className="wiz-done-card-title">Tell your team</div>
-          <div className="wiz-done-card-body">Let them know they can log into MPOS now.</div>
-          <button className="wiz-btn-secondary wiz-done-card-btn">Download login instructions</button>
+          <div className="wiz-done-card-title">Share login details</div>
+          <div className="wiz-done-card-body">Your team will need their MPOS login to get started.</div>
+          <button className="wiz-btn-secondary wiz-done-card-btn">Download instructions</button>
         </div>
         <div className="wiz-done-card wiz-done-card-primary">
           <div className="wiz-done-card-title">View your team</div>
-          <div className="wiz-done-card-body">See everyone in the dashboard.</div>
+          <div className="wiz-done-card-body">See all accounts in the dashboard.</div>
           <button className="wiz-btn-primary wiz-done-card-btn" onClick={onGoToDashboard}>
             Go to dashboard &rarr;
           </button>
         </div>
         <div className="wiz-done-card">
-          <div className="wiz-done-card-title">Add more later</div>
+          <div className="wiz-done-card-title">Add more people</div>
           <div className="wiz-done-card-body">You can add individual users or upload another file anytime.</div>
           <button className="wiz-btn-secondary wiz-done-card-btn">Learn how</button>
         </div>
       </div>
 
       <div className="wiz-done-summary">
-        44 created &middot; 3 skipped &middot; Completed in 6 minutes
+        44 created &middot; 3 skipped &middot; Completed in 8 minutes
       </div>
     </div>
   );
@@ -730,10 +791,9 @@ export default function DealerSetupWizard() {
         <div className={`wiz-page ${transitioning ? (direction === 'forward' ? 'out-left' : 'out-right') : 'in'}`}>
           {current === 1 && <Step1Welcome onNext={() => next(2)} />}
           {current === 2 && <Step2Upload onBack={() => back(1)} onNext={() => next(3)} />}
-          {current === 3 && <Step3Confirm onBack={() => back(2)} onNext={() => next(4)} />}
-          {current === 4 && <Step4Errors onBack={() => back(3)} onNext={() => next(5)} />}
-          {current === 5 && <Step5Preview onBack={() => back(4)} onNext={() => next(6)} />}
-          {current === 6 && <Step6Done onGoToDashboard={() => navigate('/dealer-network')} />}
+          {current === 3 && <Step3Review onBack={() => back(2)} onNext={() => next(4)} />}
+          {current === 4 && <Step4Preview onBack={() => back(3)} onNext={() => next(5)} />}
+          {current === 5 && <Step5Done onGoToDashboard={() => navigate('/dealer-network')} />}
         </div>
       </main>
     </div>
