@@ -36,6 +36,7 @@ import SettingsPage from './components/settings/SettingsPage';
 import BulkOnboarding from './components/bulk-onboarding/BulkOnboarding';
 import PlanConfigGenerator from './components/plan-config/PlanConfigGenerator';
 import DealerNetwork from './components/dealer-network/DealerNetwork';
+import DealerSetupWizard from './components/dealer-setup-wizard/DealerSetupWizard';
 import './App.css';
 
 // Picks the right home component based on the active role
@@ -71,6 +72,11 @@ function AppContent() {
   // Gate all other routes behind auth
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
+  }
+
+  // Full-page wizard — renders outside of AppShell (no sidebar/header chrome)
+  if (location.pathname === '/setup-wizard') {
+    return <DealerSetupWizard />;
   }
 
   const isDesktop =
