@@ -397,7 +397,7 @@ function Step3Review({ onBack, onNext }: { onBack: () => void; onNext: () => voi
               <div className="wiz-review-error-top">
                 <span className="wiz-row-badge">Row {err.rowNumber}</span>
                 <span className={`wiz-error-type-badge ${isFixed ? 'fixed' : ''}`}>
-                  {isFixed ? '\u2713 Fixed' : err.title}
+                  {isFixed ? '✓ Fixed' : err.title}
                 </span>
               </div>
 

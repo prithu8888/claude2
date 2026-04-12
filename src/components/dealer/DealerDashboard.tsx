@@ -7,7 +7,7 @@ import './DealerDashboard.css';
 const metricCards = [
   { icon: '\u{1F4CA}', label: 'Total Sales', value: dealerMetrics.totalSales.toLocaleString('en-IN') },
   { icon: '\u{1F4C5}', label: 'This Month', value: dealerMetrics.monthSales.toLocaleString('en-IN') },
-  { icon: '\u{1F465}', label: 'Active Promoters', value: dealerMetrics.activePromoters.toLocaleString('en-IN') },
+  { icon: '👥', label: 'Active Promoters', value: dealerMetrics.activePromoters.toLocaleString('en-IN') },
   { icon: '\u{1F4B0}', label: 'Commission Earned', value: `₹${dealerMetrics.totalCommission.toLocaleString('en-IN')}` },
 ];
 
