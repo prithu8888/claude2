@@ -1,207 +1,186 @@
 import { useMemo, useState } from 'react';
-import { countDescendants, getChildren, type NetworkUser } from './mockUsers';
+import {
+  deriveRole,
+  getChildren,
+  suggestReassignments,
+  type NetworkUser,
+} from './mockUsers';
 import Spinner from '../shared/Spinner';
 
 interface Props {
   users: NetworkUser[];
   target: NetworkUser;
   onClose: () => void;
-  onConfirm: (userId: string, reassignments: { childId: string; newParentId: string | null }[]) => void;
+  onConfirm: (
+    userId: string,
+    option: 'auto' | 'manual' | 'none',
+    reassignments: { childId: string; newParentId: string | null }[],
+    reassignmentTargetName?: string,
+  ) => void;
 }
 
 type Option = 'auto' | 'manual' | 'none';
 
 export default function DeactivateModal({ users, target, onClose, onConfirm }: Props) {
-  const [stage, setStage] = useState<'review' | 'confirming'>('review');
-  const [chosenOption, setChosenOption] = useState<Option | null>(null);
+  const directChildren = useMemo(() => getChildren(users, target.id), [users, target]);
+  const hasChildren = directChildren.length > 0;
+  const role = deriveRole(users, target);
+
+  const suggestions = useMemo(() => suggestReassignments(users, target, 2), [users, target]);
+
+  const [option, setOption] = useState<Option | null>(hasChildren ? null : 'none');
+  const [reassignTargetId, setReassignTargetId] = useState<string | null>(
+    suggestions[0]?.id ?? null,
+  );
   const [loading, setLoading] = useState(false);
 
-  const directChildren = getChildren(users, target.id);
-  const impact = countDescendants(users, target.id);
-
-  // Suggest 3 other active dealers as potential reassignment targets
-  const suggestions = useMemo(() => {
-    return users
-      .filter((u) => u.group === target.group && u.id !== target.id && u.status === 'Active')
-      .slice(0, 3)
-      .map((u) => ({
-        user: u,
-        currentChildren: getChildren(users, u.id).length,
-      }));
-  }, [users, target]);
-
-  const topSuggestion = suggestions[0];
+  const topSuggestion = suggestions.find((s) => s.id === reassignTargetId) ?? suggestions[0];
 
   const confirm = () => {
+    if (!option) return;
     setLoading(true);
     setTimeout(() => {
       let reassignments: { childId: string; newParentId: string | null }[] = [];
-      if (chosenOption === 'auto' && topSuggestion) {
-        reassignments = directChildren.map((c) => ({ childId: c.id, newParentId: topSuggestion.user.id }));
-      } else if (chosenOption === 'none') {
+      let targetName: string | undefined;
+      if (option === 'auto' && topSuggestion) {
+        reassignments = directChildren.map((c) => ({ childId: c.id, newParentId: topSuggestion.id }));
+        targetName = topSuggestion.name;
+      } else if (option === 'none') {
         reassignments = directChildren.map((c) => ({ childId: c.id, newParentId: null }));
       }
-      // 'manual' leaves the children where they are (orphaned pointer to inactive parent, operator will handle)
-      onConfirm(target.id, reassignments);
+      onConfirm(target.id, option, reassignments, targetName);
       setLoading(false);
-    }, 800);
+    }, 700);
   };
 
-  const reassignToCard = (targetUser: NetworkUser) => {
-    setLoading(true);
-    setTimeout(() => {
-      const reassignments = directChildren.map((c) => ({ childId: c.id, newParentId: targetUser.id }));
-      onConfirm(target.id, reassignments);
-      setLoading(false);
-    }, 800);
-  };
+  const suggestionChildrenCount = (u: NetworkUser) => getChildren(users, u.id).length;
 
   return (
     <div className="dn-backdrop dn-backdrop-center" onClick={onClose}>
-      <div className="dn-modal" onClick={(e) => e.stopPropagation()}>
-        <div className="dn-modal-header">
+      <div className="dn-modal dn-modal-deactivate" onClick={(e) => e.stopPropagation()}>
+        <div className="dn-modal-header dn-modal-header-amber">
           <div>
-            <div className="dn-modal-title">Review impact before deactivating</div>
-            <div className="dn-modal-sub">{target.name} · {target.group}</div>
+            <div className="dn-modal-title">Deactivate {target.name}?</div>
+            <div className="dn-modal-sub">{role} &middot; {target.phone}</div>
           </div>
           <button className="dn-close" onClick={onClose} aria-label="Close">✕</button>
         </div>
 
         <div className="dn-modal-body">
-          {stage === 'review' && (
+          {!hasChildren ? (
+            <div className="dn-impact-none">
+              This user has no one reporting to them. They will simply lose access to MPOS.
+            </div>
+          ) : (
             <>
-              <div className="dn-warn-banner">
-                <span>⚠</span>
+              <div className="dn-impact-amber">
                 <div>
-                  <strong>This change affects other users in your network.</strong>
-                  <div style={{ marginTop: 4 }}>
-                    Deactivating <strong>{target.name}</strong> will affect{' '}
-                    <strong>{impact.subDealers} sub-dealer{impact.subDealers !== 1 ? 's' : ''}</strong> and{' '}
-                    <strong>{impact.promoters} promoter{impact.promoters !== 1 ? 's' : ''}</strong> who currently report to them.
+                  <strong>Deactivating {target.name} will affect {directChildren.length} {directChildren.length === 1 ? 'person' : 'people'} who currently report to them:</strong>
+                  <ul className="dn-impact-list">
+                    {directChildren.map((c) => (
+                      <li key={c.id}>
+                        {c.name} <span className="dn-impact-role">({deriveRole(users, c)})</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="dn-impact-sub">
+                    These users will lose their manager and won’t be able to sell until reassigned.
                   </div>
                 </div>
               </div>
 
-              <div className="dn-impact-box">
-                Pick how you’d like to handle their downstream users. You can auto-reassign all of them to another active {target.group.toLowerCase()}, handle it manually later, or deactivate without reassignment.
-                <div className="dn-impact-stats">
-                  <div className="dn-impact-stat">
-                    <strong>{directChildren.length}</strong>
-                    <span>Direct reports</span>
+              {suggestions.length > 0 && (
+                <>
+                  <div className="dn-reassign-section-title">Suggested reassignments</div>
+                  <div className="dn-reassign-grid">
+                    {suggestions.map((s) => {
+                      const selected = reassignTargetId === s.id;
+                      const sRole = deriveRole(users, s);
+                      return (
+                        <label key={s.id} className={`dn-reassign-radio-card ${selected ? 'selected' : ''}`}>
+                          <input
+                            type="radio"
+                            name="reassign-target"
+                            checked={selected}
+                            onChange={() => {
+                              setReassignTargetId(s.id);
+                              setOption('auto');
+                            }}
+                          />
+                          <div className="dn-reassign-card-body">
+                            <div className="dn-reassign-card-top">
+                              <div className="dn-user-name">{s.name}</div>
+                              <span className={`dn-role-pill ${sRole === 'Dealer' ? 'role-dealer' : sRole === 'Sub-dealer' ? 'role-subdealer' : 'role-promoter'}`}>
+                                {sRole}
+                              </span>
+                            </div>
+                            <div className="dn-reassign-card-meta">
+                              Currently manages {suggestionChildrenCount(s)} {suggestionChildrenCount(s) === 1 ? 'person' : 'people'}
+                            </div>
+                          </div>
+                        </label>
+                      );
+                    })}
                   </div>
-                  <div className="dn-impact-stat">
-                    <strong>{impact.subDealers}</strong>
-                    <span>Sub-dealers</span>
-                  </div>
-                  <div className="dn-impact-stat">
-                    <strong>{impact.promoters}</strong>
-                    <span>Promoters</span>
-                  </div>
-                </div>
-              </div>
+                </>
+              )}
 
-              <div className="dn-reassign-section-title">Suggested reassignments</div>
-              <div className="dn-reassign-grid">
-                {suggestions.map((s, i) => (
-                  <div key={s.user.id} className={`dn-reassign-card ${i === 0 ? 'recommended' : ''}`}>
-                    <div className="dn-reassign-card-left">
-                      <div className="dn-user-avatar">{s.user.name.split(' ').map((n) => n[0]).join('').slice(0, 2)}</div>
-                      <div>
-                        <div className="dn-user-name">{s.user.name}</div>
-                        <div className="dn-user-sub">
-                          {s.user.phone} · {s.currentChildren} direct report{s.currentChildren !== 1 ? 's' : ''}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="dn-reassign-card-right">
-                      {i === 0 && <span className="dn-recommended-chip">Recommended</span>}
-                      <button className="dn-btn-secondary" onClick={() => reassignToCard(s.user)} disabled={loading}>
-                        Reassign all here
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
+              <div className="dn-reassign-section-title">Choose how to handle their reports</div>
               <div className="dn-deactivate-options">
-                <button
-                  className="dn-option-btn primary"
-                  onClick={() => { setChosenOption('auto'); setStage('confirming'); }}
-                  disabled={!topSuggestion}
-                >
+                <label className={`dn-option-radio ${option === 'auto' ? 'selected' : ''}`}>
+                  <input
+                    type="radio"
+                    name="deactivate-option"
+                    checked={option === 'auto'}
+                    onChange={() => setOption('auto')}
+                  />
                   <div>
-                    Auto-reassign to {topSuggestion?.user.name ?? 'top suggestion'}
-                    <small>Moves all {directChildren.length} direct report{directChildren.length !== 1 ? 's' : ''} to the recommended dealer</small>
+                    <strong>Reassign {directChildren.map((c) => c.name).join(' and ')} to {topSuggestion?.name ?? 'top suggestion'}</strong>
+                    <small>
+                      They’ll continue reporting to a {topSuggestion ? deriveRole(users, topSuggestion) : 'peer'} under {target.name}’s manager.
+                    </small>
                   </div>
-                  <span>→</span>
-                </button>
-                <button
-                  className="dn-option-btn"
-                  onClick={() => { setChosenOption('manual'); setStage('confirming'); }}
-                >
+                </label>
+
+                <label className={`dn-option-radio ${option === 'manual' ? 'selected' : ''}`}>
+                  <input
+                    type="radio"
+                    name="deactivate-option"
+                    checked={option === 'manual'}
+                    onChange={() => setOption('manual')}
+                  />
                   <div>
-                    I’ll handle reassignment manually
-                    <small>Children keep their current parent; you can reassign them one-by-one</small>
+                    <strong>I’ll reassign them manually later</strong>
+                    <small>They won’t be able to sell until you reassign them.</small>
                   </div>
-                  <span>→</span>
-                </button>
-                <button
-                  className="dn-option-btn danger"
-                  onClick={() => { setChosenOption('none'); setStage('confirming'); }}
-                >
+                </label>
+
+                <label className={`dn-option-radio dn-option-danger ${option === 'none' ? 'selected' : ''}`}>
+                  <input
+                    type="radio"
+                    name="deactivate-option"
+                    checked={option === 'none'}
+                    onChange={() => setOption('none')}
+                  />
                   <div>
-                    Deactivate without reassigning
-                    <small>Not recommended — downstream users will have no active parent</small>
+                    <strong>Deactivate without reassigning</strong>
+                    <small>Not recommended — creates orphaned users.</small>
                   </div>
-                  <span>→</span>
-                </button>
+                </label>
               </div>
             </>
-          )}
-
-          {stage === 'confirming' && (
-            <div>
-              <div className="dn-warn-banner">
-                <span>⚠</span>
-                <div>
-                  <strong>Confirm deactivation</strong>
-                  <div style={{ marginTop: 4 }}>
-                    {chosenOption === 'auto' && (
-                      <>
-                        Deactivate <strong>{target.name}</strong> and move their {directChildren.length} direct report{directChildren.length !== 1 ? 's' : ''} to <strong>{topSuggestion?.user.name}</strong>.
-                      </>
-                    )}
-                    {chosenOption === 'manual' && (
-                      <>
-                        Deactivate <strong>{target.name}</strong>. You’ll handle the {directChildren.length} affected user{directChildren.length !== 1 ? 's' : ''} manually.
-                      </>
-                    )}
-                    {chosenOption === 'none' && (
-                      <>
-                        Deactivate <strong>{target.name}</strong> and leave {directChildren.length} user{directChildren.length !== 1 ? 's' : ''} without an active parent. Sales to these users will be blocked.
-                      </>
-                    )}
-                  </div>
-                </div>
-              </div>
-              <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--dn-text-secondary)', marginTop: 'var(--space-4)' }}>
-                This action can be reversed — reactivating the user will restore all current hierarchy links.
-              </p>
-            </div>
           )}
         </div>
 
         <div className="dn-modal-footer">
-          {stage === 'review' ? (
-            <button className="dn-btn-ghost" onClick={onClose}>Cancel</button>
-          ) : (
-            <>
-              <button className="dn-btn-ghost" onClick={() => setStage('review')} disabled={loading}>Back</button>
-              <button className="dn-btn-danger" onClick={confirm} disabled={loading}>
-                {loading ? <><Spinner size={14} /> Deactivating…</> : `Confirm & deactivate`}
-              </button>
-            </>
-          )}
+          <button className="dn-btn-ghost" onClick={onClose}>Cancel</button>
+          <button
+            className="dn-btn-danger"
+            onClick={confirm}
+            disabled={loading || (hasChildren && !option)}
+          >
+            {loading ? <><Spinner size={14} /> Deactivating…</> : 'Confirm deactivation'}
+          </button>
         </div>
       </div>
     </div>

@@ -1,5 +1,11 @@
 import { useMemo, useState } from 'react';
-import { getChildren, getParentName, validParentsFor, type NetworkUser } from './mockUsers';
+import {
+  getParentName,
+  getChildren,
+  deriveRole,
+  validHorizontalParents,
+  type NetworkUser,
+} from './mockUsers';
 import Spinner from '../shared/Spinner';
 
 interface Props {
@@ -14,11 +20,12 @@ export default function MoveUserModal({ users, target, onClose, onConfirm }: Pro
   const [selectedParentId, setSelectedParentId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
+  const role = deriveRole(users, target);
   const oldParentName = getParentName(users, target.parentId);
   const children = getChildren(users, target.id);
 
   const options = useMemo(() => {
-    const list = validParentsFor(users, target.group).filter((p) => p.id !== target.parentId);
+    const list = validHorizontalParents(users, target);
     if (!search) return list;
     const q = search.toLowerCase();
     return list.filter((p) => p.name.toLowerCase().includes(q) || p.phone.includes(q));
@@ -32,8 +39,12 @@ export default function MoveUserModal({ users, target, onClose, onConfirm }: Pro
     setTimeout(() => {
       onConfirm(target.id, selectedParent.id, oldParentName, selectedParent.name);
       setLoading(false);
-    }, 800);
+    }, 600);
   };
+
+  const roleClass = role === 'Sub-dealer' ? 'role-subdealer' : 'role-promoter';
+  const helperLabel =
+    role === 'Sub-dealer' ? 'Pick a different Dealer' : 'Pick a different Sub-dealer';
 
   return (
     <div className="dn-backdrop" onClick={onClose}>
@@ -41,41 +52,35 @@ export default function MoveUserModal({ users, target, onClose, onConfirm }: Pro
         <div className="dn-modal-header">
           <div>
             <div className="dn-modal-title">Move user</div>
-            <div className="dn-modal-sub">{target.name} · {target.group}</div>
+            <div className="dn-modal-sub">Role stays the same &mdash; only their manager changes.</div>
           </div>
           <button className="dn-close" onClick={onClose} aria-label="Close">✕</button>
         </div>
 
         <div className="dn-modal-body">
-          <div className="dn-field">
-            <label>Current parent</label>
-            <div className="dn-current-parent">
+          {/* User summary */}
+          <div className="dn-move-summary">
+            <div className="dn-move-summary-top">
               <div className="dn-user-avatar">
-                {oldParentName.split(' ').map((n) => n[0]).join('').slice(0, 2)}
+                {target.name.split(' ').map((n) => n[0]).join('').slice(0, 2)}
               </div>
               <div>
-                <strong>{oldParentName}</strong>
-                {target.parentId && (
-                  <span> · {users.find((u) => u.id === target.parentId)?.group}</span>
-                )}
+                <div className="dn-user-name">{target.name}</div>
+                <div className="dn-user-sub">{target.phone}</div>
               </div>
+              <span className={`dn-role-pill ${roleClass}`}>{role}</span>
+            </div>
+            <div className="dn-move-current">
+              Currently reports to <strong>{oldParentName}</strong>
             </div>
           </div>
 
-          {children.length > 0 && (
-            <div className="dn-info-box">
-              <span className="dn-info-icon">ℹ</span>
-              <div>
-                This user has <strong>{children.length} child{children.length !== 1 ? 'ren' : ''}</strong>. They will stay with {target.name} under the new parent. You can reassign them separately from each user’s action menu.
-              </div>
-            </div>
-          )}
-
+          {/* New parent picker */}
           <div className="dn-field">
-            <label>New parent {target.group === 'Sub-dealer' ? '(pick a Dealer)' : '(pick a Sub-dealer)'}</label>
+            <label>Who should they report to now?</label>
             <input
               className="dn-input"
-              placeholder={`Search ${target.group === 'Sub-dealer' ? 'dealers' : 'sub-dealers'} by name or phone`}
+              placeholder={`${helperLabel} &mdash; search by name or phone`}
               value={selectedParent ? selectedParent.name : search}
               onChange={(e) => {
                 setSearch(e.target.value);
@@ -85,7 +90,7 @@ export default function MoveUserModal({ users, target, onClose, onConfirm }: Pro
             {!selectedParent && (
               <div className="dn-parent-list">
                 {options.length === 0 ? (
-                  <div className="dn-parent-empty">No valid parents available</div>
+                  <div className="dn-parent-empty">No other {role === 'Sub-dealer' ? 'dealers' : 'sub-dealers'} available</div>
                 ) : (
                   options.slice(0, 6).map((p) => (
                     <button
@@ -98,20 +103,42 @@ export default function MoveUserModal({ users, target, onClose, onConfirm }: Pro
                       </div>
                       <div>
                         <div className="dn-user-name">{p.name}</div>
-                        <div className="dn-user-sub">{p.phone} · {p.group}</div>
+                        <div className="dn-user-sub">{p.phone}</div>
                       </div>
                     </button>
                   ))
                 )}
               </div>
             )}
-            {selectedParent && (
-              <div className="dn-field-hint success">
-                <span>✓</span> Will report to {selectedParent.name}
-                <button className="dn-btn-ghost dn-link-btn" onClick={() => setSelectedParentId(null)}>Change</button>
-              </div>
-            )}
           </div>
+
+          {/* Preview card */}
+          {selectedParent && (
+            <div className="dn-move-preview">
+              <strong>
+                {target.name} will move from {oldParentName} to {selectedParent.name}
+              </strong>
+              <div className="dn-move-preview-sub">
+                Role stays the same: <span className={`dn-role-pill ${roleClass}`}>{role}</span>
+              </div>
+            </div>
+          )}
+
+          {/* Children warning */}
+          {children.length > 0 && (
+            <div className="dn-move-warning">
+              <span className="dn-warning-icon">!</span>
+              <div>
+                <strong>
+                  {target.name} has {children.length} {children.length === 1 ? 'person' : 'people'} reporting to them
+                  ({children.map((c) => c.name).join(', ')}).
+                </strong>
+                <span>
+                  They will stay under {oldParentName} &mdash; you’ll need to move them separately if needed.
+                </span>
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="dn-modal-footer">
