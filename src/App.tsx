@@ -37,6 +37,7 @@ import BulkOnboarding from './components/bulk-onboarding/BulkOnboarding';
 import PlanConfigGenerator from './components/plan-config/PlanConfigGenerator';
 import DealerNetwork from './components/dealer-network/DealerNetwork';
 import DealerSetupWizard from './components/dealer-setup-wizard/DealerSetupWizard';
+import InstantIncentive from './components/instant-incentive/InstantIncentive';
 import './App.css';
 
 // Picks the right home component based on the active role
@@ -77,6 +78,10 @@ function AppContent() {
   // Full-page wizard — renders outside of AppShell (no sidebar/header chrome)
   if (location.pathname === '/setup-wizard') {
     return <DealerSetupWizard />;
+  }
+
+  if (location.pathname === '/instant-incentive') {
+    return <InstantIncentive />;
   }
 
   const isDesktop =
