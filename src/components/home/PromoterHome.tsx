@@ -122,10 +122,15 @@ export default function PromoterHome() {
           <AIBadge shimmer label="AI" />
         </div>
         <div className="home-ai-grid">
-          <button className="home-ai-card home-ai-card-primary" onClick={() => navigate('/ask')}>
+          <button className="home-ai-card home-ai-card-primary" onClick={() => navigate('/instant-incentive')}>
+            <div className="home-ai-card-icon">&#128176;</div>
+            <div className="home-ai-card-title">Instant Incentive</div>
+            <div className="home-ai-card-sub">Track earnings, withdraw balance, see leaderboard</div>
+          </button>
+          <button className="home-ai-card" onClick={() => navigate('/ask')}>
             <div className="home-ai-card-icon">&#10022;</div>
             <div className="home-ai-card-title">Ask MPOS</div>
-            <div className="home-ai-card-sub">Get answers, insights, and take actions in plain English</div>
+            <div className="home-ai-card-sub">Get answers, insights, and actions</div>
           </button>
           <button className="home-ai-card" onClick={() => navigate('/training')}>
             <div className="home-ai-card-icon">&#128104;&#8205;&#127891;</div>
